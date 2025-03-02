@@ -1,0 +1,6 @@
+@Children_s_drawing.API_HostAddress = http://localhost:5058
+
+GET {{Children_s_drawing.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
