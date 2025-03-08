@@ -17,7 +17,7 @@ namespace Childrens_drawing.Service.Services
         }
         public T Add(T entity)
         {
-            _repositoryManager.GetType(T)
+            _repositoryManager.
         }
 
         public void DeleteById(int id)
