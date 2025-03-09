@@ -3,45 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
+using Children_s_drawing.Core.InterfacesServices;
+using Childrens_drawing.Core.Dtos;
 
 namespace Children_s_drawing.Service.Services
 {
-    public class PaintedPaintingService
+    public class PaintedPaintingService:IPaintedPaintingService
     {
         readonly IRepositoryManager _repositoryManager;
-        public PaintedPaintingService(IRepositoryManager repositoryManager)
+        readonly IMapper _mapper;
+        public PaintedPaintingService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
-        public PaintedPainting Add(PaintedPainting branch)
+        public PaintedPaintingDto Add(PaintedPaintingDto paintedPaintingDto)
         {
-            if (branch == null) return null;
-            return _repositoryManager._paintedPaintingRepository.Add(branch);
-        }
-
-        public void DeleteById(int id)
-        {
-             _repositoryManager._paintedPaintingRepository.DeleteById(id);
-        }
-
-        public IEnumerable<PaintedPainting> GetAll()
-        {
-            IEnumerable<PaintedPainting> paintedpaintingRepository = _repositoryManager._paintedPaintingRepository.GetAll();
-            if (paintedpaintingRepository == null) return new List<PaintedPainting>();
-            return paintedpaintingRepository;
+            var p = _mapper.Map<PaintedPainting>(paintedPaintingDto);
+            p = _repositoryManager._paintedPaintingRepository.Add(p);
+            if (p != null)
+                _repositoryManager.Save();
+            return _mapper.Map<PaintedPaintingDto>(p);
         }
 
-        public PaintedPainting GetById(int id)
+        public bool DeleteById(int id)
         {
-            return _repositoryManager._paintedPaintingRepository.GetById(id);
+            bool succeed = _repositoryManager._paintedPaintingRepository.DeleteById(id);
+            if(succeed)
+                _repositoryManager.Save();
+            return succeed;
         }
 
-        public void UpdateById(int id, PaintedPainting p)
+        public async Task<IEnumerable<PaintedPaintingDto>> GetAllAsync()
         {
-            //if (b == null) return false;
-            _repositoryManager._paintedPaintingRepository.UpdateById(id, p);
+            var paintedPaintings = await _repositoryManager._paintedPaintingRepository.GetAllAsync();
+            //if (categoryRepository == null) return new List<CategoryDto>();
+            return _mapper.Map<IEnumerable<PaintedPaintingDto>>(paintedPaintings);
+        }
+
+        public PaintedPaintingDto? GetById(int id)
+        {
+            var paintedPainting = _repositoryManager._paintedPaintingRepository.GetById(id);
+            if (paintedPainting == null)
+                return null;
+            return _mapper.Map<PaintedPaintingDto>(paintedPainting);
+        }
+
+        public PaintedPaintingDto? UpdateById(int id, PaintedPaintingDto p)
+        {
+            var paintedPainting = _mapper.Map<PaintedPainting>(p);
+            paintedPainting = _repositoryManager._paintedPaintingRepository.UpdateById(id, paintedPainting);
+            if (paintedPainting != null)
+                _repositoryManager.Save();
+            return _mapper.Map<PaintedPaintingDto>(paintedPainting);
         }
     }
 }

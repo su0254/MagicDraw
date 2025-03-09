@@ -23,16 +23,20 @@ namespace Children_s_drawing.Data.Repositories
             return entity;
         }
 
-        public void DeleteById(int id)
+        public bool DeleteById(int id)
         {
             var entity = GetById(id);
-            if(entity != null) 
-                _dbSet.Remove(entity);
+            if(entity != null)
+            {
+                 _dbSet.Remove(entity);
+                return true;
+            }
+            return false;   
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return _dbSet.ToList();
+            return await _dbSet.ToListAsync();
         }
 
         public T? GetById(int id)

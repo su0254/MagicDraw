@@ -3,45 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
+using Children_s_drawing.Core.InterfacesServices;
+using Childrens_drawing.Core.Dtos;
 
 namespace Children_s_drawing.Service.Services
 {
-    public class CategoryService
+    public class CategoryService:ICategoryService
     {
         readonly IRepositoryManager _repositoryManager;
-        public CategoryService(IRepositoryManager repositoryManager)
+        readonly IMapper _mapper;
+        public CategoryService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
-        public Category Add(Category categoty)
+        public CategoryDto Add(CategoryDto categoty)
         {
-            if (categoty == null) return null;
-            return _repositoryManager._categoryRepository.Add(categoty);
-        }
-
-        public void DeleteById(int id)
-        {
-             _repositoryManager._categoryRepository.DeleteById(id);
-        }
-
-        public IEnumerable<Category> GetAll()
-        {
-            IEnumerable<Category> categoryRepository = _repositoryManager._categoryRepository.GetAll();
-            if (categoryRepository == null) return new List<Category>();
-            return categoryRepository;
+            var c = _mapper.Map<Category>(categoty);
+            c = _repositoryManager._categoryRepository.Add(c);
+            if (c != null)
+                _repositoryManager.Save();
+            return _mapper.Map<CategoryDto>(c);
         }
 
-        public Category GetById(int id)
+        public bool DeleteById(int id)
         {
-            return _repositoryManager._categoryRepository.GetById(id);
+             bool secceed = _repositoryManager._categoryRepository.DeleteById(id);
+            if(secceed)
+                _repositoryManager.Save();
+            return secceed;
         }
 
-        public void UpdateById(int id, Category c)
+        public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
-            //if (c == null) return false;
-             _repositoryManager._categoryRepository.UpdateById(id, c);
+            var categorys = await _repositoryManager._categoryRepository.GetAllAsync();
+            //if (categoryRepository == null) return new List<CategoryDto>();
+            return _mapper.Map<IEnumerable<CategoryDto>>(categorys);
+        }
+
+        public CategoryDto? GetById(int id)
+        {
+            var category = _repositoryManager._categoryRepository.GetById(id);
+            if (category == null)
+                return null;
+            return _mapper.Map<CategoryDto>(category);
+        }
+
+        public CategoryDto? UpdateById(int id, CategoryDto c)
+        {
+            var category = _mapper.Map<Category>(c);
+            category = _repositoryManager._categoryRepository.UpdateById(id, category);
+            if (category != null)
+                _repositoryManager.Save();
+            return _mapper.Map<CategoryDto>(category);
         }
     }
 }

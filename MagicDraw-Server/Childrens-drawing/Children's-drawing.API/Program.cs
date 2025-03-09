@@ -1,4 +1,7 @@
 
+using Childrens_drawing.API;
+using Childrens_drawing.Core;
+
 namespace Children_s_drawing.API
 {
     public class Program
@@ -8,12 +11,14 @@ namespace Children_s_drawing.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container
-            builder.Services.AddControllers();
+            //builder.Services.AddControllers();
 
             // הוספת Swagger והגדרות OpenAPI לפני builder.Build()
             builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDependencies();
 
             // Build the application
             var app = builder.Build();

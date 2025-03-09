@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Children_s_drawing.Core.InterfacesServices;
+using Childrens_drawing.Core.Dtos;
+using Childrens_drawing.Core.PostModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +13,62 @@ namespace Children_s_drawing.API.Controllers
     [ApiController]
     public class PaintedPaintingController : ControllerBase
     {
-        // GET: api/<PaintedPaintingController>
+        private readonly IPaintedPaintingService _paintedPaintingService;
+        private readonly IMapper _mapper;
+        public PaintedPaintingController(IPaintedPaintingService paintedPaintingService, IMapper mapper)
+        {
+            _paintedPaintingService = paintedPaintingService;
+            _mapper = mapper;
+        }
+
+        // GET: api/<CategoryController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<PaintedPaintingDto>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var paintedPaintings = await _paintedPaintingService.GetAllAsync();
+            if (paintedPaintings == null)
+                return NotFound();
+            return Ok(paintedPaintings);
         }
 
-        // GET api/<PaintedPaintingController>/5
+        // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<PaintedPaintingDto> Get(int id)
         {
-            return "value";
+            var p = _paintedPaintingService.GetById(id);
+            if (p == null)
+                return NotFound();
+            return Ok(p);
+
         }
 
-        // POST api/<PaintedPaintingController>
+        // POST api/<CategoryController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<PaintedPaintingDto> Post([FromBody] PaintedPaintingPostModel paintedPainting)
         {
+            var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
+            paintedPaintingDto = _paintedPaintingService.Add(paintedPaintingDto);
+            if (paintedPaintingDto == null)
+                return NotFound();
+            return paintedPaintingDto;
         }
 
-        // PUT api/<PaintedPaintingController>/5
+        // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<PaintedPaintingDto> Put(int id, [FromBody] PaintedPaintingPostModel paintedPainting)
         {
+            var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
+            paintedPaintingDto = _paintedPaintingService.UpdateById(id, paintedPaintingDto);
+            if (paintedPaintingDto == null)
+                return NotFound();
+            return paintedPaintingDto;
         }
 
-        // DELETE api/<PaintedPaintingController>/5
+        // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            _paintedPaintingService.DeleteById(id);
         }
     }
 }

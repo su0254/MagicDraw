@@ -3,45 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
+using Children_s_drawing.Core.InterfacesServices;
+using Childrens_drawing.Core.Dtos;
 
 namespace Children_s_drawing.Service.Services
 {
-    public class UserService
+    public class UserService:IUserService
     {
         readonly IRepositoryManager _repositoryManager;
-        public UserService(IRepositoryManager repositoryManager)
+        readonly IMapper _mapper;
+        public UserService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
-        public User Add(User branch)
+        public UserDto Add(UserDto userDto)
         {
-            if (branch == null) return null;
-            return _repositoryManager._userRepository.Add(branch);
-        }
-
-        public void DeleteById(int id)
-        {
-             _repositoryManager._userRepository.DeleteById(id);
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            IEnumerable<User> paintinghRepository = _repositoryManager._userRepository.GetAll();
-            if (paintinghRepository == null) return new List<User>();
-            return paintinghRepository;
+            var u = _mapper.Map<User>(userDto);
+            u = _repositoryManager._userRepository.Add(u);
+            if (u != null)
+                _repositoryManager.Save();
+            return _mapper.Map<UserDto>(u);
         }
 
-        public User GetById(int id)
+        public bool DeleteById(int id)
         {
-            return _repositoryManager._userRepository.GetById(id);
+            bool succeed = _repositoryManager._userRepository.DeleteById(id);
+            if(succeed) 
+                _repositoryManager.Save();
+            return succeed;
         }
 
-        public void UpdateById(int id, User u)
+        public async Task<IEnumerable<UserDto>> GetAllAsync()
         {
-            //if (b == null) return false;
-            _repositoryManager._userRepository.UpdateById(id, u);
+            var users = await _repositoryManager._userRepository.GetAllAsync();
+            //if (categoryRepository == null) return new List<CategoryDto>();
+            return _mapper.Map<IEnumerable<UserDto>>(users);
+        }
+
+        public UserDto? GetById(int id)
+        {
+            var user = _repositoryManager._userRepository.GetById(id);
+            if (user == null)
+                return null;
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public UserDto? UpdateById(int id, UserDto u)
+        {
+            var user = _mapper.Map<User>(u);
+            user = _repositoryManager._userRepository.UpdateById(id, user);
+            if (user != null)
+                _repositoryManager.Save();
+            return _mapper.Map<UserDto>(user);
         }
     }
 }

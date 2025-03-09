@@ -8,9 +8,9 @@ namespace Children_s_drawing.Core.InterfacesServices
 {
     public interface IService<T>
     {
-        public IEnumerable<T> GetAll();
+        public Task<IEnumerable<T>> GetAllAsync();
         public T? GetById(int id);
-        public void DeleteById(int id);
+        public bool DeleteById(int id);
         public T? UpdateById(int id, T entity);
         public T Add(T entity);
     }
