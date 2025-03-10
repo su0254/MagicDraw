@@ -29,7 +29,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<CategoryDto>(c);
         }
 
-        public bool DeleteById(int id)
+        public bool DeleteById(Guid id)
         {
              bool secceed = _repositoryManager._categoryRepository.DeleteById(id);
             if(secceed)
@@ -44,7 +44,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<IEnumerable<CategoryDto>>(categorys);
         }
 
-        public CategoryDto? GetById(int id)
+        public CategoryDto? GetById(Guid id)
         {
             var category = _repositoryManager._categoryRepository.GetById(id);
             if (category == null)
@@ -52,7 +52,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<CategoryDto>(category);
         }
 
-        public CategoryDto? UpdateById(int id, CategoryDto c)
+        public CategoryDto? UpdateById(Guid id, CategoryDto c)
         {
             var category = _mapper.Map<Category>(c);
             category = _repositoryManager._categoryRepository.UpdateById(id, category);

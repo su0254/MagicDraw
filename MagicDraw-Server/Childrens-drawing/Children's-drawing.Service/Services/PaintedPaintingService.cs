@@ -29,7 +29,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<PaintedPaintingDto>(p);
         }
 
-        public bool DeleteById(int id)
+        public bool DeleteById(Guid id)
         {
             bool succeed = _repositoryManager._paintedPaintingRepository.DeleteById(id);
             if(succeed)
@@ -44,7 +44,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<IEnumerable<PaintedPaintingDto>>(paintedPaintings);
         }
 
-        public PaintedPaintingDto? GetById(int id)
+        public PaintedPaintingDto? GetById(Guid id)
         {
             var paintedPainting = _repositoryManager._paintedPaintingRepository.GetById(id);
             if (paintedPainting == null)
@@ -52,7 +52,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<PaintedPaintingDto>(paintedPainting);
         }
 
-        public PaintedPaintingDto? UpdateById(int id, PaintedPaintingDto p)
+        public PaintedPaintingDto? UpdateById(Guid id, PaintedPaintingDto p)
         {
             var paintedPainting = _mapper.Map<PaintedPainting>(p);
             paintedPainting = _repositoryManager._paintedPaintingRepository.UpdateById(id, paintedPainting);

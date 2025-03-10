@@ -29,7 +29,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<UserDto>(u);
         }
 
-        public bool DeleteById(int id)
+        public bool DeleteById(Guid id)
         {
             bool succeed = _repositoryManager._userRepository.DeleteById(id);
             if(succeed) 
@@ -44,7 +44,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
-        public UserDto? GetById(int id)
+        public UserDto? GetById(Guid id)
         {
             var user = _repositoryManager._userRepository.GetById(id);
             if (user == null)
@@ -52,7 +52,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public UserDto? UpdateById(int id, UserDto u)
+        public UserDto? UpdateById(Guid id, UserDto u)
         {
             var user = _mapper.Map<User>(u);
             user = _repositoryManager._userRepository.UpdateById(id, user);

@@ -23,7 +23,7 @@ namespace Children_s_drawing.Data.Repositories
             return entity;
         }
 
-        public bool DeleteById(int id)
+        public bool DeleteById(Guid id)
         {
             var entity = GetById(id);
             if(entity != null)
@@ -39,12 +39,12 @@ namespace Children_s_drawing.Data.Repositories
             return await _dbSet.ToListAsync();
         }
 
-        public T? GetById(int id)
+        public T? GetById(Guid id)
         {
             return _dbSet.Find(id);
         }
 
-        public T? UpdateById(int id, T entity)
+        public T? UpdateById(Guid id, T entity)
         {
             var temp_entity = GetById(id);
             if (temp_entity == null)

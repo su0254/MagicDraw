@@ -20,10 +20,14 @@ namespace Children_s_drawing.Data
 
         }
 
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    base.OnConfiguring(optionsBuilder);
+        //    optionsBuilder.LogTo(mesege => Console.Write(mesege));
+        //}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.LogTo(mesege => Console.Write(mesege));
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-7TLL0C3\\SQLEXPRESS01; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
         }
     }
 }

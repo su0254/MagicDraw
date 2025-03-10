@@ -33,7 +33,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public ActionResult<UserDto> Get(int id)
+        public ActionResult<UserDto> Get(Guid id)
         {
             var u = _userService.GetById(id);
             if (u == null)
@@ -55,7 +55,7 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public ActionResult<UserDto> Put(int id, [FromBody] UserPostModel user)
+        public ActionResult<UserDto> Put(Guid id, [FromBody] UserPostModel user)
         {
             var userDto = _mapper.Map<UserDto>(user);
             userDto = _userService.UpdateById(id, userDto);
@@ -66,7 +66,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             _userService.DeleteById(id);
         }

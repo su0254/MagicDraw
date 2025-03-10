@@ -29,7 +29,7 @@ namespace Childrens_drawing.API
             services.AddDbContext<DataContext>();
 
             services.AddAutoMapper(typeof(MappingProfile));
-
+            services.AddAutoMapper(typeof(MappingPostProfile));
         }
     }
 }

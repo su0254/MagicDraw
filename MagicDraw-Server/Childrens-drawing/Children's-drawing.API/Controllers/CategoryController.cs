@@ -35,7 +35,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public ActionResult<CategoryDto> Get(int id)
+        public ActionResult<CategoryDto> Get(Guid id)
         {
             var c = _categoryService.GetById(id);
             if (c == null)
@@ -57,7 +57,7 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public ActionResult<CategoryDto> Put(int id, [FromBody] CategoryPostModel category)
+        public ActionResult<CategoryDto> Put(Guid id, [FromBody] CategoryPostModel category)
         {
             var categoryDto = _mapper.Map<CategoryDto>(category);
             categoryDto = _categoryService.UpdateById(id, categoryDto);
@@ -68,7 +68,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
              _categoryService.DeleteById(id);
         }

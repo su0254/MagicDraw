@@ -33,7 +33,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public ActionResult<PaintedPaintingDto> Get(int id)
+        public ActionResult<PaintedPaintingDto> Get(Guid id)
         {
             var p = _paintedPaintingService.GetById(id);
             if (p == null)
@@ -55,7 +55,7 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public ActionResult<PaintedPaintingDto> Put(int id, [FromBody] PaintedPaintingPostModel paintedPainting)
+        public ActionResult<PaintedPaintingDto> Put(Guid id, [FromBody] PaintedPaintingPostModel paintedPainting)
         {
             var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
             paintedPaintingDto = _paintedPaintingService.UpdateById(id, paintedPaintingDto);
@@ -66,7 +66,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             _paintedPaintingService.DeleteById(id);
         }
