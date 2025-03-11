@@ -1,5 +1,6 @@
 ﻿using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,10 @@ using System.Threading.Tasks;
 
 namespace Children_s_drawing.Data.Repositories
 {
-    public class UserRepository:Repository<User>, IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(DataContext dataContext):base(dataContext)
+        public UserRepository(DataContext dataContext) : base(dataContext)
         {
-            
         }
     }
 }

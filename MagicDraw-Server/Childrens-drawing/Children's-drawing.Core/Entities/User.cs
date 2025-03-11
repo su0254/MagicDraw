@@ -17,8 +17,8 @@ namespace Children_s_drawing.Core.Entities
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
 
-        List<PaintedPainting> PaintedPaintings { get; set; }
-        List<Painting> Paintings { get; set; }
+        public List<PaintedPainting> PaintedPaintings { get; set; }
+        public List<Painting> Paintings { get; set; }
 
         public User()
         {

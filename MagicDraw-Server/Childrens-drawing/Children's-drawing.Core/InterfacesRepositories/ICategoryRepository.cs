@@ -9,5 +9,6 @@ namespace Children_s_drawing.Core.InterfacesRepositories
 {
     public interface ICategoryRepository:IRepository<Category>
     {
+        public Task<Category?> GetByNameAsync(string name);
     }
 }

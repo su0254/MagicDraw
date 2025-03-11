@@ -11,7 +11,7 @@ using Childrens_drawing.Core.Dtos;
 
 namespace Children_s_drawing.Service.Services
 {
-    public class UserService:IUserService
+    public class UserService : IUserService, IService<UserDto>
     {
         readonly IRepositoryManager _repositoryManager;
         readonly IMapper _mapper;
@@ -20,45 +20,66 @@ namespace Children_s_drawing.Service.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-        public UserDto Add(UserDto userDto)
-        {
-            var u = _mapper.Map<User>(userDto);
-            u = _repositoryManager._userRepository.Add(u);
-            if (u != null)
-                _repositoryManager.Save();
-            return _mapper.Map<UserDto>(u);
-        }
-
-        public bool DeleteById(Guid id)
-        {
-            bool succeed = _repositoryManager._userRepository.DeleteById(id);
-            if(succeed) 
-                _repositoryManager.Save();
-            return succeed;
-        }
 
         public async Task<IEnumerable<UserDto>> GetAllAsync()
         {
             var users = await _repositoryManager._userRepository.GetAllAsync();
-            //if (categoryRepository == null) return new List<CategoryDto>();
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
-        public UserDto? GetById(Guid id)
+        public async Task<UserDto?> GetByIdAsync(Guid id)
         {
-            var user = _repositoryManager._userRepository.GetById(id);
+            var user = await _repositoryManager._userRepository.GetByIdAsync(id);
             if (user == null)
                 return null;
             return _mapper.Map<UserDto>(user);
         }
 
-        public UserDto? UpdateById(Guid id, UserDto u)
+        public async Task<bool> DeleteByIdAsync(Guid id)
+        {
+            // מחפש את המשתמש
+            var user = await _repositoryManager._userRepository.GetByIdAsync(id);
+            if (user != null)
+            {
+                // נניח שיש לך List של ציורים במשתמש
+                var paintedPaintings = user.PaintedPaintings; // נניח ש-Paintings הוא List של ציורים
+
+                if (paintedPaintings != null && paintedPaintings.Any())
+                {
+                    foreach (var paintedPainting in paintedPaintings)
+                    {
+                        await _repositoryManager._paintingRepository.DeleteByIdAsync(paintedPainting.Id); // מחיקת ציור בודד
+                    }
+                }
+
+                // עכשיו מוחקים את המשתמש
+                bool succeed = await _repositoryManager._userRepository.DeleteByIdAsync(id);
+                if (succeed)
+                    await _repositoryManager.SaveAsync();
+
+                return succeed;
+            }
+            return false; // אם המשתמש לא נמצא
+        }
+
+
+
+        public async Task<UserDto?> UpdateByIdAsync(Guid id, UserDto u)
         {
             var user = _mapper.Map<User>(u);
-            user = _repositoryManager._userRepository.UpdateById(id, user);
+            user = await _repositoryManager._userRepository.UpdateByIdAsync(id, user);
             if (user != null)
-                _repositoryManager.Save();
+                await _repositoryManager.SaveAsync();
             return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> AddAsync(UserDto userDto)
+        {
+            var u = _mapper.Map<User>(userDto);
+            u = await _repositoryManager._userRepository.AddAsync(u);
+            if (u != null)
+                await _repositoryManager.SaveAsync();
+            return _mapper.Map<UserDto>(u);
         }
     }
 }

@@ -20,21 +20,40 @@ namespace Children_s_drawing.Service.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-        public CategoryDto Add(CategoryDto categoty)
+        public async Task<CategoryDto> AddAsync(CategoryDto categoty)
         {
             var c = _mapper.Map<Category>(categoty);
-            c = _repositoryManager._categoryRepository.Add(c);
+            c = await _repositoryManager._categoryRepository.AddAsync(c);
             if (c != null)
-                _repositoryManager.Save();
+                await _repositoryManager.SaveAsync();
             return _mapper.Map<CategoryDto>(c);
         }
 
-        public bool DeleteById(Guid id)
+        public async Task<bool> DeleteByIdAsync(Guid id)
         {
-             bool secceed = _repositoryManager._categoryRepository.DeleteById(id);
-            if(secceed)
-                _repositoryManager.Save();
-            return secceed;
+            // מחפש את המשתמש
+            var category = await _repositoryManager._categoryRepository.GetByIdAsync(id);
+            if (category != null)
+            {
+                // נניח שיש לך List של ציורים במשתמש
+                var paintings = category.Paintings; // נניח ש-Paintings הוא List של ציורים
+
+                if (paintings != null && paintings.Any())
+                {
+                    foreach (var painting in paintings)
+                    {
+                        await _repositoryManager._paintingRepository.DeleteByIdAsync(painting.Id); // מחיקת ציור בודד
+                    }
+                }
+
+                // עכשיו מוחקים את המשתמש
+                bool succeed = await _repositoryManager._userRepository.DeleteByIdAsync(id);
+                if (succeed)
+                    await _repositoryManager.SaveAsync();
+
+                return succeed;
+            }
+            return false; // אם המשתמש לא נמצא
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
@@ -44,20 +63,20 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<IEnumerable<CategoryDto>>(categorys);
         }
 
-        public CategoryDto? GetById(Guid id)
+        public async Task<CategoryDto?> GetByIdAsync(Guid id)
         {
-            var category = _repositoryManager._categoryRepository.GetById(id);
+            var category = await _repositoryManager._categoryRepository.GetByIdAsync(id);
             if (category == null)
                 return null;
             return _mapper.Map<CategoryDto>(category);
         }
 
-        public CategoryDto? UpdateById(Guid id, CategoryDto c)
+        public async Task<CategoryDto?> UpdateByIdAsync(Guid id, CategoryDto c)
         {
             var category = _mapper.Map<Category>(c);
-            category = _repositoryManager._categoryRepository.UpdateById(id, category);
+            category = await _repositoryManager._categoryRepository.UpdateByIdAsync(id, category);
             if (category != null)
-                _repositoryManager.Save();
+                await _repositoryManager.SaveAsync();
             return _mapper.Map<CategoryDto>(category);
         }
     }

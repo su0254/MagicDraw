@@ -33,9 +33,9 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public ActionResult<PaintedPaintingDto> Get(Guid id)
+        public async Task<ActionResult<PaintedPaintingDto>> Get(Guid id)
         {
-            var p = _paintedPaintingService.GetById(id);
+            var p = await _paintedPaintingService.GetByIdAsync(id);
             if (p == null)
                 return NotFound();
             return Ok(p);
@@ -44,10 +44,10 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        public ActionResult<PaintedPaintingDto> Post([FromBody] PaintedPaintingPostModel paintedPainting)
+        public async Task<ActionResult<PaintedPaintingDto>> Post([FromBody] PaintedPaintingPostModel paintedPainting)
         {
             var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
-            paintedPaintingDto = _paintedPaintingService.Add(paintedPaintingDto);
+            paintedPaintingDto = await _paintedPaintingService.AddAsync(paintedPaintingDto);
             if (paintedPaintingDto == null)
                 return NotFound();
             return paintedPaintingDto;
@@ -55,10 +55,10 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public ActionResult<PaintedPaintingDto> Put(Guid id, [FromBody] PaintedPaintingPostModel paintedPainting)
+        public async Task<ActionResult<PaintedPaintingDto>> Put(Guid id, [FromBody] PaintedPaintingPostModel paintedPainting)
         {
             var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
-            paintedPaintingDto = _paintedPaintingService.UpdateById(id, paintedPaintingDto);
+            paintedPaintingDto = await _paintedPaintingService.UpdateByIdAsync(id, paintedPaintingDto);
             if (paintedPaintingDto == null)
                 return NotFound();
             return paintedPaintingDto;
@@ -66,9 +66,9 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            _paintedPaintingService.DeleteById(id);
+            return await _paintedPaintingService.DeleteByIdAsync(id);
         }
     }
 }

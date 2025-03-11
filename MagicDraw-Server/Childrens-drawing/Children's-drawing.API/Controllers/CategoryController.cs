@@ -35,9 +35,9 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public ActionResult<CategoryDto> Get(Guid id)
+        public async Task<ActionResult<CategoryDto>> Get(Guid id)
         {
-            var c = _categoryService.GetById(id);
+            var c = await _categoryService.GetByIdAsync(id);
             if (c == null)
                 return NotFound();
             return c;
@@ -46,10 +46,10 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        public ActionResult<CategoryDto> Post([FromBody] CategoryPostModel category)
+        public async Task<ActionResult<CategoryDto>> Post([FromBody] CategoryPostModel category)
         {
             var categoryDto = _mapper.Map<CategoryDto>(category);
-            categoryDto = _categoryService.Add(categoryDto);
+            categoryDto = await _categoryService.AddAsync(categoryDto);
             if (categoryDto == null)
                 return NotFound();
             return categoryDto;
@@ -57,10 +57,10 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public ActionResult<CategoryDto> Put(Guid id, [FromBody] CategoryPostModel category)
+        public async Task<ActionResult<CategoryDto>> Put(Guid id, [FromBody] CategoryPostModel category)
         {
             var categoryDto = _mapper.Map<CategoryDto>(category);
-            categoryDto = _categoryService.UpdateById(id, categoryDto);
+            categoryDto = await _categoryService.UpdateByIdAsync(id, categoryDto);
             if (categoryDto == null)
                 return NotFound();
             return categoryDto;
@@ -68,9 +68,9 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-             _categoryService.DeleteById(id);
+            return await _categoryService.DeleteByIdAsync(id);
         }
     }
 }

@@ -33,9 +33,9 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public ActionResult<PaintingDto> Get(Guid id)
+        public async Task<ActionResult<PaintingDto>> Get(Guid id)
         {
-            var p = _paintingService.GetById(id);
+            var p = await _paintingService.GetByIdAsync(id);
             if (p == null)
                 return NotFound();
             return Ok(p);
@@ -44,10 +44,10 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        public ActionResult<PaintingDto> Post([FromBody] PaintingPostModel painting)
+        public async Task<ActionResult<PaintingDto>> Post([FromBody] PaintingPostModel painting)
         {
             var paintingDto = _mapper.Map<PaintingDto>(painting);
-            paintingDto = _paintingService.Add(paintingDto);
+            paintingDto = await _paintingService.AddAsync(paintingDto);
             if (paintingDto == null)
                 return NotFound();
             return paintingDto;
@@ -55,10 +55,10 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public ActionResult<PaintingDto> Put(Guid id, [FromBody] PaintingPostModel painting)
+        public async Task<ActionResult<PaintingDto>> Put(Guid id, [FromBody] PaintingPostModel painting)
         {
             var paintingDto = _mapper.Map<PaintingDto>(painting);
-            paintingDto = _paintingService.UpdateById(id, paintingDto);
+            paintingDto = await _paintingService.UpdateByIdAsync(id, paintingDto);
             if (paintingDto == null)
                 return NotFound();
             return paintingDto;
@@ -66,9 +66,9 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            _paintingService.DeleteById(id);
+            return await _paintingService.DeleteByIdAsync(id);
         }
     }
 }

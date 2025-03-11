@@ -14,10 +14,10 @@ namespace Childrens_drawing.API
     {
         public MappingPostProfile() 
         {
-            CreateMap<UserPostModel, UserDto>().ReverseMap();
-            CreateMap<CategoryPostModel, CategoryDto>().ReverseMap();
-            CreateMap<PaintedPaintingPostModel, PaintedPaintingDto>().ReverseMap();
-            CreateMap<PaintingPostModel, PaintingDto>().ReverseMap();
+            CreateMap<UserPostModel, UserDto>();
+            CreateMap<CategoryPostModel, CategoryDto>();
+            CreateMap<PaintedPaintingPostModel, PaintedPaintingDto>();
+            CreateMap<PaintingPostModel, PaintingDto>();
         }
     }
 }

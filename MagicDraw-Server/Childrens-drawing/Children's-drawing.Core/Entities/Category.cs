@@ -12,7 +12,7 @@ namespace Children_s_drawing.Core.Entities
         public string CategoryName { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
-        List<Painting> Paintings {  get; set; }
+        public List<Painting> Paintings {  get; set; }
         public Category() 
         {
             Id = Guid.NewGuid();

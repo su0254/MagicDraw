@@ -1,7 +1,9 @@
 ﻿using Children_s_drawing.Core.InterfacesRepositories;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,21 +19,21 @@ namespace Children_s_drawing.Data.Repositories
         {
             _dbSet = dataContext.Set<T>();
         }
-        public T Add(T entity)
+        public async Task<T> AddAsync(T entity)
         {
-            _dbSet.Add(entity);
+            await _dbSet.AddAsync(entity);
             return entity;
         }
 
-        public bool DeleteById(Guid id)
+        public async Task<bool> DeleteByIdAsync(Guid id)
         {
-            var entity = GetById(id);
-            if(entity != null)
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
             {
-                 _dbSet.Remove(entity);
+                _dbSet.Remove(entity);
                 return true;
             }
-            return false;   
+            return false;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
@@ -39,25 +41,40 @@ namespace Children_s_drawing.Data.Repositories
             return await _dbSet.ToListAsync();
         }
 
-        public T? GetById(Guid id)
+        public async Task<T?> GetByIdAsync(Guid id)
         {
-            return _dbSet.Find(id);
+            return await _dbSet.FindAsync(id);
         }
 
-        public T? UpdateById(Guid id, T entity)
+        public async Task<T?> UpdateByIdAsync(Guid id, T entity)
         {
-            var temp_entity = GetById(id);
+            var temp_entity = await GetByIdAsync(id);
             if (temp_entity == null)
                 return null;
 
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                                    .Where(property => property.Name != "id");
+            //var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            //                                        .Where(property => property.Name != "Id");
+            //foreach (var property in properties)
+            //{
+            //    var value = property.GetValue(entity);
+            //    if (value != null)
+            //    {
+            //        property.SetValue(entity, value);
+            //    }
+            //}
+
+            var properties = typeof(T).GetProperties();
+
             foreach (var property in properties)
             {
-                var value = property.GetValue(entity);
-                if (value != null)
+                if (property.CanWrite && property.GetCustomAttribute<KeyAttribute>() == null)
                 {
-                    property.SetValue(entity, value);
+                    if (property.Name != "Id")
+                    {
+                        var value = property.GetValue(temp_entity);
+                        if (value != null)
+                            property.SetValue(entity, value);
+                    }
                 }
             }
             return entity;

@@ -18,7 +18,7 @@ namespace Children_s_drawing.Core.Entities
         public DateTime UpdateAt { get; set; }
 
         [ForeignKey(nameof(Id))]
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         User User { get; set; }
 
         [ForeignKey(nameof(Id))]

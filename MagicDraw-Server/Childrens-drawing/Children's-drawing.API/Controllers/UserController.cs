@@ -33,9 +33,9 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public ActionResult<UserDto> Get(Guid id)
+        public async Task<ActionResult<UserDto>> Get(Guid id)
         {
-            var u = _userService.GetById(id);
+            var u = await _userService.GetByIdAsync(id);
             if (u == null)
                 return NotFound();
             return Ok(u);
@@ -44,10 +44,10 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        public ActionResult<UserDto> Post([FromBody] UserPostModel user)
+        public async Task<ActionResult<UserDto>> Post([FromBody] UserPostModel user)
         {
             var userDto = _mapper.Map<UserDto>(user);
-            userDto = _userService.Add(userDto);
+            userDto = await _userService.AddAsync(userDto);
             if (userDto == null)
                 return NotFound();
             return userDto;
@@ -55,10 +55,10 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public ActionResult<UserDto> Put(Guid id, [FromBody] UserPostModel user)
+        public async Task<ActionResult<UserDto>> Put(Guid id, [FromBody] UserPostModel user)
         {
             var userDto = _mapper.Map<UserDto>(user);
-            userDto = _userService.UpdateById(id, userDto);
+            userDto = await _userService.UpdateByIdAsync(id, userDto);
             if (userDto == null)
                 return NotFound();
             return userDto;
@@ -66,9 +66,9 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            _userService.DeleteById(id);
+            return await _userService.DeleteByIdAsync(id);
         }
     }
 }

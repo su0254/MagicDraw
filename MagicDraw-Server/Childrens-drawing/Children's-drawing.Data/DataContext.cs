@@ -25,9 +25,16 @@ namespace Children_s_drawing.Data
         //    base.OnConfiguring(optionsBuilder);
         //    optionsBuilder.LogTo(mesege => Console.Write(mesege));
         //}
+
+        //localhost
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Data Source=DESKTOP-7TLL0C3\\SQLEXPRESS01; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
+        //}
+        //
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-7TLL0C3\\SQLEXPRESS01; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Data Source=sqlsrv; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
         }
     }
 }

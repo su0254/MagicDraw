@@ -11,7 +11,7 @@ using Childrens_drawing.Core.Dtos;
 
 namespace Children_s_drawing.Service.Services
 {
-    public class PaintingService:IPaintingService
+    public class PaintingService : IPaintingService, IService<PaintingDto>
     {
         readonly IRepositoryManager _repositoryManager;
         readonly IMapper _mapper;
@@ -20,45 +20,68 @@ namespace Children_s_drawing.Service.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-        public PaintingDto Add(PaintingDto paintingDto)
+        public async Task<PaintingDto> AddAsync(PaintingDto paintingDto)
         {
-            var p = _mapper.Map<Painting>(paintingDto);
-            p = _repositoryManager._paintingRepository.Add(p);
-            if (p != null)
-                _repositoryManager.Save();
-            return _mapper.Map<PaintingDto>(p);
+            var painting = _mapper.Map<Painting>(paintingDto);
+
+            var user = await _repositoryManager._userRepository.GetByIdAsync(painting.UserId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            user.Paintings.Add(painting);
+
+            var category = await _repositoryManager._categoryRepository.GetByNameAsync(paintingDto.Category);
+            if (category == null)
+            {
+                throw new Exception("Category not found");
+            }
+            category.Paintings.Add(painting);
+
+            // Set the CategoryId property
+            painting.CategoryId = category.Id.ToString();
+
+            painting = await _repositoryManager._paintingRepository.AddAsync(painting);
+            if (painting != null)
+            {
+                await _repositoryManager.SaveAsync(); // Save changes to the database
+            }
+
+            return _mapper.Map<PaintingDto>(painting); // Return the PaintingDto
         }
 
-        public bool DeleteById(Guid id)
+
+
+        public async Task<bool> DeleteByIdAsync(Guid id)
         {
-            bool succeed = _repositoryManager._paintingRepository.DeleteById(id);
-            if(succeed)
-                _repositoryManager.Save();
+            bool succeed = await _repositoryManager._paintingRepository.DeleteByIdAsync(id);
+            if (succeed)
+                await _repositoryManager.SaveAsync();
             return succeed;
         }
 
         public async Task<IEnumerable<PaintingDto>> GetAllAsync()
         {
             var paintings = await _repositoryManager._paintingRepository.GetAllAsync();
-            //if (categoryRepository == null) return new List<CategoryDto>();
             return _mapper.Map<IEnumerable<PaintingDto>>(paintings);
         }
 
-        public PaintingDto? GetById(Guid id)
+        public async Task<PaintingDto?> GetByIdAsync(Guid id)
         {
-            var painting = _repositoryManager._paintingRepository.GetById(id);
+            var painting = await _repositoryManager._paintingRepository.GetByIdAsync(id);
             if (painting == null)
                 return null;
             return _mapper.Map<PaintingDto>(painting);
         }
 
-        public PaintingDto? UpdateById(Guid id, PaintingDto p)
+        public async Task<PaintingDto?> UpdateByIdAsync(Guid id, PaintingDto p)
         {
             var painting = _mapper.Map<Painting>(p);
-            painting = _repositoryManager._paintingRepository.UpdateById(id, painting);
+            painting = await _repositoryManager._paintingRepository.UpdateByIdAsync(id, painting);
             if (painting != null)
-                _repositoryManager.Save();
+                await _repositoryManager.SaveAsync();
             return _mapper.Map<PaintingDto>(painting);
         }
+
     }
 }

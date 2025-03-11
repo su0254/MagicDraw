@@ -9,9 +9,9 @@ namespace Children_s_drawing.Core.InterfacesRepositories
     public interface IRepository<T>
     {
         public Task<IEnumerable<T>> GetAllAsync();
-        public T? GetById(Guid id);
-        public bool DeleteById(Guid id);
-        public T? UpdateById(Guid id, T entity);
-        public T Add(T entity);
+        public Task<T?> GetByIdAsync(Guid id);
+        public Task<bool> DeleteByIdAsync(Guid id);
+        public Task<T?> UpdateByIdAsync(Guid id, T entity);
+        public Task<T> AddAsync(T entity);
     }
 }

@@ -13,6 +13,6 @@ namespace Childrens_drawing.Core.Dtos
         public string Category { get; set; }
         public string Url { get; set; }
         public int Age { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

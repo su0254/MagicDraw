@@ -12,5 +12,6 @@ namespace Childrens_drawing.Core.PostModels
         public string Category { get; set; }
         //public string Url { get; set; }
         public int Age { get; set; }
+        public Guid UserId { get; set; }
     }
 }

@@ -12,6 +12,6 @@ namespace Children_s_drawing.Core.InterfacesRepositories
         public IPaintingRepository _paintingRepository { get; }
         public IPaintedPaintingRepository _paintedPaintingRepository { get; }
         public ICategoryRepository _categoryRepository { get; }
-        public void Save();
+        public Task SaveAsync();
     }
 }

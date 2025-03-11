@@ -24,9 +24,9 @@ namespace Children_s_drawing.Data.Repositories
             _categoryRepository = categoryRepository;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _datacontext.SaveChanges();
+            await _datacontext.SaveChangesAsync();
         }
     }
 }
