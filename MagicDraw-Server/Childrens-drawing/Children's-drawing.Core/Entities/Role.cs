@@ -22,8 +22,8 @@ namespace Childrens_drawing.Core.Entities
         [StringLength(50, MinimumLength = 2, ErrorMessage = "The name cannot exceed 50 characters.")]
         public string RoleName { get; set; } // Role Name
 
-        [Required(ErrorMessage = "The 'Description' field is required.")]
-        public string Description { get; set; } // Role Description
+        //[Required(ErrorMessage = "The 'Description' field is required.")]
+        public string Description { get; set; } = "descraption"; // Role Description
         public DateTime CreatedAt { get; set; } // Role Creation Date
         public DateTime UpdatedAt { get; set; } // Last Updated Date
 

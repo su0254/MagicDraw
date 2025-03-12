@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Childrens_drawing.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250312141703_delete rolePermission")]
-    partial class deleterolePermission
+    [Migration("20250312205958_add_JWT_tables")]
+    partial class add_JWT_tables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,7 +128,7 @@ namespace Childrens_drawing.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -147,7 +147,7 @@ namespace Childrens_drawing.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");

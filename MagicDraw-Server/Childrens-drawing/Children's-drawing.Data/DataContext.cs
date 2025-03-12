@@ -27,19 +27,19 @@ namespace Children_s_drawing.Data
         //}
 
         //localhost
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("Data Source=DESKTOP-7TLL0C3\\SQLEXPRESS01; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-7TLL0C3\\SQLEXPRESS01; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
+        }
         //
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer("Data Source=sqlsrv; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
         //}
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=שלמה\\SQLEXPRESS; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Data Source=שלמה\\SQLEXPRESS; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
+        //}
     }
 }

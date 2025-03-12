@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Childrens_drawing.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250312135058_add permissions tables")]
-    partial class addpermissionstables
+    [Migration("20250312212912_update_userPostModel")]
+    partial class update_userPostModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,7 +128,7 @@ namespace Childrens_drawing.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -147,12 +147,87 @@ namespace Childrens_drawing.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Childrens_drawing.Core.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PermissionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permission");
+                });
+
+            modelBuilder.Entity("Childrens_drawing.Core.Entities.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role");
+                });
+
+            modelBuilder.Entity("PermissionRole", b =>
+                {
+                    b.Property<Guid>("PermissionsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PermissionsId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("PermissionRole");
+                });
+
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("RolesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("Children_s_drawing.Core.Entities.PaintedPainting", b =>
@@ -179,6 +254,36 @@ namespace Childrens_drawing.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("MyCategory");
+                });
+
+            modelBuilder.Entity("PermissionRole", b =>
+                {
+                    b.HasOne("Childrens_drawing.Core.Entities.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Childrens_drawing.Core.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.HasOne("Childrens_drawing.Core.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Children_s_drawing.Core.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Children_s_drawing.Core.Entities.Category", b =>
