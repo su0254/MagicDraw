@@ -1,5 +1,6 @@
 ﻿using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,15 @@ namespace Children_s_drawing.Data.Repositories
     {
         public UserRepository(DataContext dataContext) : base(dataContext)
         {
+        }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            if(string.IsNullOrWhiteSpace(email))
+            {
+                return null;
+            }
+            return await _dbSet.FirstOrDefaultAsync(user => user.Email == email);
         }
     }
 }

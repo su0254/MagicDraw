@@ -12,7 +12,7 @@ namespace Children_s_drawing.Data.Repositories
     {
         public PaintingRepository(DataContext dataContext):base(dataContext)
         {
-            
+           
         }
     }
 }

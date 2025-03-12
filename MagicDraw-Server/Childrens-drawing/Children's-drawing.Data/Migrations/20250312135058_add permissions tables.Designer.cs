@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Childrens_drawing.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250311164920_firstMigration")]
-    partial class firstMigration
+    [Migration("20250312135058_add permissions tables")]
+    partial class addpermissionstables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,11 +70,12 @@ namespace Childrens_drawing.Data.Migrations
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("PaintedPaintings");
                 });
@@ -109,13 +110,14 @@ namespace Childrens_drawing.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MyCategoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Paintings");
                 });
@@ -153,15 +155,42 @@ namespace Childrens_drawing.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Children_s_drawing.Core.Entities.PaintedPainting", b =>
+                {
+                    b.HasOne("Children_s_drawing.Core.Entities.User", null)
+                        .WithMany("PaintedPaintings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Children_s_drawing.Core.Entities.Painting", b =>
                 {
                     b.HasOne("Children_s_drawing.Core.Entities.Category", "MyCategory")
-                        .WithMany()
+                        .WithMany("Paintings")
                         .HasForeignKey("MyCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Children_s_drawing.Core.Entities.User", null)
+                        .WithMany("Paintings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("MyCategory");
+                });
+
+            modelBuilder.Entity("Children_s_drawing.Core.Entities.Category", b =>
+                {
+                    b.Navigation("Paintings");
+                });
+
+            modelBuilder.Entity("Children_s_drawing.Core.Entities.User", b =>
+                {
+                    b.Navigation("PaintedPaintings");
+
+                    b.Navigation("Paintings");
                 });
 #pragma warning restore 612, 618
         }

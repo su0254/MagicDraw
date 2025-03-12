@@ -4,6 +4,8 @@ using Children_s_drawing.Data;
 using Children_s_drawing.Data.Repositories;
 using Children_s_drawing.Service.Services;
 using Childrens_drawing.Core;
+using Childrens_drawing.Core.InterfacesServices;
+using Childrens_drawing.Service.Services;
 
 namespace Childrens_drawing.API
 {
@@ -20,6 +22,9 @@ namespace Childrens_drawing.API
             services.AddScoped<IPaintedPaintingService, PaintedPaintingService>();
             services.AddScoped<IPaintingService, PaintingService>();
             services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IAuthService, AuthService>();
+
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IRepositoryManager, RepositoryManager>();

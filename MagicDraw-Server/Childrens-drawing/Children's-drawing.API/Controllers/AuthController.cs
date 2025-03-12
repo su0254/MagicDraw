@@ -1,4 +1,9 @@
-﻿using Children_s_drawing.Core.Entities;
+﻿using AutoMapper;
+using Children_s_drawing.Core.Entities;
+using Childrens_drawing.API.PostModels;
+using Childrens_drawing.Core.Dtos;
+using Childrens_drawing.Core.InterfacesServices;
+using Childrens_drawing.Core.PostModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,41 +12,43 @@ using System.Text;
 
 namespace Childrens_drawing.API.Controllers
 {
-        [Route("api/[controller]")]
-        [ApiController]
-        public class AuthController : ControllerBase
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
+        private readonly IMapper _mapper;
+
+        public AuthController(IConfiguration configuration, IAuthService authService, IMapper mapper)
         {
-            private readonly IConfiguration _configuration;
+            _configuration = configuration;
+            _authService = authService;
+            _mapper = mapper;
+        }
 
-            public AuthController(IConfiguration configuration)
-            {
-                _configuration = configuration;
-            }
-
-            [HttpPost]
-            public IActionResult Login([FromBody] User loginModel)
-            {
-                if (loginModel.FirstName == "malkabr" && loginModel.Password == "123456")
-                {
-                    var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.Name, "malkabr"),
-                new Claim(ClaimTypes.Role, "teacher")
-            };
-
-                    var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWT:Key")));
-                    var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                    var tokeOptions = new JwtSecurityToken(
-                        issuer: _configuration.GetValue<string>("JWT:Issuer"),
-                        audience: _configuration.GetValue<string>("JWT:Audience"),
-                        claims: claims,
-                        expires: DateTime.Now.AddMinutes(6),
-                        signingCredentials: signinCredentials
-                    );
-                    var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                    return Ok(new { Token = tokenString });
-                }
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResDto>> LoginAsync([FromBody] LoginPostModel loginPostModel)
+        {
+            if (string.IsNullOrWhiteSpace(loginPostModel.Email) && string.IsNullOrWhiteSpace(loginPostModel.Password))
+                return BadRequest("Email and password are required");
+            var user = await _authService.LoginAsync(loginPostModel.Email, loginPostModel.Password);
+            if (user == null)
                 return Unauthorized();
-            }
+
+            return Ok(user);
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<LoginResDto>> RegisterAsync([FromBody] UserPostModel userPostModel)
+        {
+            if (string.IsNullOrWhiteSpace(userPostModel.Email) && string.IsNullOrWhiteSpace(userPostModel.Password))
+                return BadRequest("Email and password are required");
+            var userDto = _mapper.Map<UserDto>(userPostModel);
+            var loginResDto = await _authService.RegisterAsync(userDto);
+            if (loginResDto == null)
+                return BadRequest("User already exists");
+            return Ok(loginResDto);
         }
     }
+}

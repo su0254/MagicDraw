@@ -2,6 +2,7 @@
 using Children_s_drawing.Core.InterfacesServices;
 using Childrens_drawing.Core.Dtos;
 using Childrens_drawing.Core.PostModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET: api/<CategoryController>
         [HttpGet]
+        [Authorize(Roles= "Admin")] 
         public async Task<ActionResult<IEnumerable<PaintedPaintingDto>>> Get()
         {
             var paintedPaintings = await _paintedPaintingService.GetAllAsync();
@@ -33,6 +35,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles= "EditorOrAdmin")]
         public async Task<ActionResult<PaintedPaintingDto>> Get(Guid id)
         {
             var p = await _paintedPaintingService.GetByIdAsync(id);
@@ -44,6 +47,7 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
+        [Authorize(Roles = "EditorOrAdmin")]
         public async Task<ActionResult<PaintedPaintingDto>> Post([FromBody] PaintedPaintingPostModel paintedPainting)
         {
             var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
@@ -55,6 +59,7 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "EditorOrAdmin")]
         public async Task<ActionResult<PaintedPaintingDto>> Put(Guid id, [FromBody] PaintedPaintingPostModel paintedPainting)
         {
             var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
@@ -66,6 +71,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "EditorOrAdmin")]
         public async Task<bool> Delete(Guid id)
         {
             return await _paintedPaintingService.DeleteByIdAsync(id);

@@ -9,5 +9,6 @@ namespace Children_s_drawing.Core.InterfacesRepositories
 {
     public interface IUserRepository:IRepository<User>
     {
+        public Task<User?> GetByEmailAsync(string email);
     }
 }

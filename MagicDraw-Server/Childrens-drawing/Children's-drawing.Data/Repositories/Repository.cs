@@ -14,7 +14,6 @@ namespace Children_s_drawing.Data.Repositories
     public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly DbSet<T> _dbSet;
-
         public Repository(DataContext dataContext)
         {
             _dbSet = dataContext.Set<T>();
