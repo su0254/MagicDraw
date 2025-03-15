@@ -78,7 +78,7 @@ namespace Children_s_drawing.API
 
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("EditorOrAdmin", policy => policy.RequireRole("Editor", "Admin"));
                 //options.AddPolicy("Viewer", policy => policy.RequireRole("Viewer", "Editor", "Admin"));
             });
