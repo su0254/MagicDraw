@@ -1,9 +1,10 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Typography, Box, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Category from './Category';
 
 const HomePage: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // הפעל את ה-hook
 
   return (
     <Box
@@ -39,22 +40,50 @@ const HomePage: React.FC = () => {
                 margin: '0 10px',
                 fontWeight: 'bold',
                 borderRadius: '20px',
+                background: 'linear-gradient(135deg, #84fab0, #8fd3f4)', // Pastel gradient
+                color: '#fff',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #8fd3f4, #84fab0)', // Reverse gradient on hover
+                },
+              }}
+              onClick={() => navigate('/register')} // Navigate to the register page
+            >
+              Register
+            </Button>
+            <Button
+              sx={{
+                margin: '0 10px',
+                fontWeight: 'bold',
+                borderRadius: '20px',
                 background: 'linear-gradient(135deg, #ff9a9e, #fad0c4)',
                 color: '#fff',
                 '&:hover': {
                   background: 'linear-gradient(135deg, #fad0c4, #ff9a9e)',
                 },
               }}
-              onClick={() => /*navigate('/login')*/ console.log('Login')}
+              onClick={() => navigate('/login')} // השתמש ב-navigate
             >
               Login
             </Button>
-            {/* שאר הכפתורים נשארים ללא שינוי */}
+            <Button
+              sx={{
+                margin: '0 10px',
+                fontWeight: 'bold',
+                borderRadius: '20px',
+                background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
+                color: '#fff',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #8fd3f4, #84fab0)',
+                },
+              }}
+              onClick={() => navigate('/logout')} // השתמש ב-navigate
+            >
+              Logout
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>
 
-      {/* תוכן מרכזי */}
       <Container
         sx={{
           flex: 1,
@@ -88,6 +117,7 @@ const HomePage: React.FC = () => {
           Discover, explore, and enjoy beautiful paintings from around the world. Let your creativity and imagination soar.
         </Typography>
       </Container>
+      <Category />
     </Box>
   );
 };

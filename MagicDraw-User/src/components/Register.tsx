@@ -2,22 +2,27 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Box, Typography, TextField, Button, Paper } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../store/slices/authSlice';
+import { addUser, login } from '../store/slices/authSlice';
 import { AppDispatch, RootState } from '../store/store';
 import { UserLoginType } from '../types/UserLoginType';
 
-const Login: React.FC = () => {
+interface RegisterFormInputs extends UserLoginType {
+  firstName: string;
+  lastName: string;
+}
+
+const Register: React.FC = () => {
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<UserLoginType>();
+  } = useForm<RegisterFormInputs>();
 
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error } = useSelector((state: RootState) => state.auth as { loading: boolean; error: string | null }); // Access Redux state
 
-  const onSubmit = (data: UserLoginType) => {
-    dispatch(login(data)); // Dispatch the login action
+  const onSubmit = (data: RegisterFormInputs) => {
+    dispatch(addUser(data)); // Dispatch the login action
   };
 
   return (
@@ -50,9 +55,43 @@ const Login: React.FC = () => {
             color: '#333',
           }}
         >
-          Login
+          Register
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            name="firstName"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'First name is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="First Name"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message}
+              />
+            )}
+          />
+          <Controller
+            name="lastName"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Last name is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Last Name"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                error={!!errors.lastName}
+                helperText={errors.lastName?.message}
+              />
+            )}
+          />
           <Controller
             name="mail"
             control={control}
@@ -109,8 +148,7 @@ const Login: React.FC = () => {
             }}
             // disabled={loading}
           >
-            {/* {loading ? <CircularProgress size={24} sx={{ color: '#fff' }} /> : 'Login'} */}
-            Login
+            Register
           </Button>
         </form>
       </Paper>
@@ -118,4 +156,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;
