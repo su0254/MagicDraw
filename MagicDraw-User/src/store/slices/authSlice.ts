@@ -20,7 +20,7 @@ export const login = createAsyncThunk('data/login', async (data: UserLoginType, 
         password: data.password,
       }
     );
-    console.log(response.data);
+    console.log(response);
     sessionStorage.setItem('authToken', response.data.token);
     return response.data; // Ensure this matches your API response structure
   } catch (e: any) {

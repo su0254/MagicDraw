@@ -22,7 +22,7 @@ namespace Children_s_drawing.Data.Repositories
             {
                 return null;
             }
-            return await _dbSet.FirstOrDefaultAsync(user => user.Email == email);
+            return await _dbSet.Include(u => u.Roles).FirstOrDefaultAsync(user => user.Email == email);
         }
     }
 }
