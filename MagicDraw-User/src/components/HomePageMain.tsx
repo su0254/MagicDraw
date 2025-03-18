@@ -206,37 +206,37 @@
 
 // export default HomePageMain;
 
-import React, { useState } from 'react';
-import mammoth from 'mammoth';
+// import React, { useState } from 'react';
+// import mammoth from 'mammoth';
 
-interface ImageFile {
-  name: string;
-  path: string;
-}
+// interface ImageFile {
+//   name: string;
+//   path: string;
+// }
 
-const HomePageMain = () => {
-  const [images] = useState<ImageFile[]>([
-    { name: 'Image 1', path: 'Y:\Groups\Group_5\אולמן שרה\practicom\MagicDraw\MagicDraw-User\src\images\SSGP0177.JPG' },
-    { name: 'Image 2', path: 'Y:\Groups\Group_5\אולמן שרה\practicom\MagicDraw\MagicDraw-User\src\images\SSGP0222.JPG' },
-    { name: 'Image 3', path: 'Y:\Groups\Group_5\אולמן שרה\practicom\MagicDraw\MagicDraw-User\src\images\SSGP0247.JPG' }
-  ]);
+// const HomePageMain = () => {
+//   const [images] = useState<ImageFile[]>([
+//     { name: 'Image 1', path: 'Y:\Groups\Group_5\אולמן שרה\practicom\MagicDraw\MagicDraw-User\src\images\SSGP0177.JPG' },
+//     { name: 'Image 2', path: 'Y:\Groups\Group_5\אולמן שרה\practicom\MagicDraw\MagicDraw-User\src\images\SSGP0222.JPG' },
+//     { name: 'Image 3', path: 'Y:\Groups\Group_5\אולמן שרה\practicom\MagicDraw\MagicDraw-User\src\images\SSGP0247.JPG' }
+//   ]);
 
-  return (
-    <div>
-      <h2>גלריית תמונות</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {images.map((image, index) => (
-          <div key={index} style={{ margin: '10px' }}>
-            <img
-              src={image.path}
-              alt={image.name}
-              style={{ width: '150px', height: '150px', objectFit: 'cover' }}
-            />
-            <p>{image.name}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-);
-};
-export default HomePageMain;
+//   return (
+//     <div>
+//       <h2>גלריית תמונות</h2>
+//       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+//         {images.map((image, index) => (
+//           <div key={index} style={{ margin: '10px' }}>
+//             <img
+//               src={image.path}
+//               alt={image.name}
+//               style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+//             />
+//             <p>{image.name}</p>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+// );
+// };
+// export default HomePageMain;
