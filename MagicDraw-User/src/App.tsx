@@ -7,18 +7,20 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import HomePageMain from './components/HomePageMain';
 import DrawingApp from './components/DrawingApp';
+import ShowPainting from './components/ShowPainting';
 
 
 const App = () => {
   return (
     <>
-      {/* <HomePage/> */}
-      {/* <Provider store={store}>
+    {/* <HomePageMain /> */}
+      {/* <HomePage/> */} 
+      <Provider store={store}>
         <RouterProvider router={router} />
-      </Provider> */}
+      </Provider>
       {/* <Category/> */}
-      {/* <HomePageMain /> */}
-      <DrawingApp />
+      {/* <ShowPainting selectedImage={'../../public/images/5.png'} onClose={() => {}} /> */}
+      {/* <DrawingApp backgroundImageUrl={'../../public/images/5.png'} /> */}
     </>
   );
 };
