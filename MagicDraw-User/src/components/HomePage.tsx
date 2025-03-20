@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AppBar, Toolbar, Button, Typography, Box, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Category from './Category';
 import HomePageMain from './HomePageMain';
+import { useAuth } from './AuthContext';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // משתנה למעקב אחר מצב ההתחברות
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
 
   const handleLogout = () => {
     setIsLoggedIn(false); // עדכון מצב המשתמש ל"לא מחובר"
@@ -42,7 +43,6 @@ const HomePage: React.FC = () => {
             Art Gallery
           </Typography>
           <Box>
-            {/* הצגת כפתורי התחברות והרשמה אם המשתמש לא מחובר */}
             {!isLoggedIn && (
               <>
                 <Button
@@ -77,7 +77,6 @@ const HomePage: React.FC = () => {
                 </Button>
               </>
             )}
-            {/* הצגת כפתור Logout אם המשתמש מחובר */}
             {isLoggedIn && (
               <Button
                 sx={{
@@ -131,7 +130,6 @@ const HomePage: React.FC = () => {
         >
           Discover, explore, and enjoy beautiful paintings from around the world. Let your creativity and imagination soar.
         </Typography>
-        {/* כפתור להעלאת תמונה */}
         {isLoggedIn && (
           <Button
             sx={{

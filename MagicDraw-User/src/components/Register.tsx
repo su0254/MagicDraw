@@ -1,28 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Box, Typography, TextField, Button, Paper } from '@mui/material';
+import { Box, Typography, TextField, Button, Paper, Alert, Snackbar } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUser, login } from '../store/slices/authSlice';
+import { addUser } from '../store/slices/authSlice';
 import { AppDispatch, RootState } from '../store/store';
-import { UserLoginType } from '../types/UserLoginType';
+import { useNavigate } from 'react-router-dom';
+import { UserRegisterType } from '../types/UserRegisterType';
+import { useAuth } from './AuthContext';
 
-interface RegisterFormInputs extends UserLoginType {
-  firstName: string;
-  lastName: string;
-}
+// interface RegisterFormInputs {
+//   firstName: string;
+//   lastName: string;
+// }
 
 const Register: React.FC = () => {
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<RegisterFormInputs>();
+  } = useForm<UserRegisterType>();
 
+  const context=useAuth();
+  const setIsLoggedIn =  context.setIsLoggedIn;
+    
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error } = useSelector((state: RootState) => state.auth as { loading: boolean; error: string | null }); // Access Redux state
+  const navigate = useNavigate();
+  const { loading, error } = useSelector((state: RootState) => state.auth as { loading: boolean; error: string | null });
 
-  const onSubmit = (data: RegisterFormInputs) => {
-    dispatch(addUser(data)); // Dispatch the login action
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // הודעת הצלחה
+  const [failureMessage, setFailureMessage] = useState<string | null>(null); // הודעת כישלון
+
+  const onSubmit = async (data: UserRegisterType) => {
+    try {
+      await dispatch(addUser(data)).unwrap(); // Dispatch the addUser action
+      setSuccessMessage('Registration successful!'); // הצגת הודעת הצלחה
+      setFailureMessage(null); // איפוס הודעת כישלון
+      setIsLoggedIn(true); // עדכון מצב המשתמש ל"מחובר"
+      navigate('/'); // מעבר לעמוד הבית לאחר הרשמה מוצלחת
+    } catch (err) {
+      setFailureMessage('Failed to register. Please try again.'); // הצגת הודעת כישלון
+      setSuccessMessage(null); // איפוס הודעת הצלחה
+    }
+  };
+
+  const handleCancel = () => {
+    navigate('/'); // חזרה לעמוד הבית
   };
 
   return (
@@ -55,7 +77,7 @@ const Register: React.FC = () => {
             color: '#333',
           }}
         >
-          Register
+          הרשמה
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
@@ -150,8 +172,48 @@ const Register: React.FC = () => {
           >
             Register
           </Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            sx={{
+              marginTop: '10px',
+              padding: '10px',
+              fontWeight: 'bold',
+              color: '#555',
+              borderColor: '#ddd',
+              '&:hover': {
+                borderColor: '#aaa',
+                background: '#f5f5f5',
+              },
+            }}
+            onClick={handleCancel}
+          >
+            Cancel
+          </Button>
         </form>
       </Paper>
+
+      {/* אלרטים להודעות הצלחה וכישלון */}
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={6000}
+        onClose={() => setSuccessMessage(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={!!failureMessage}
+        autoHideDuration={6000}
+        onClose={() => setFailureMessage(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setFailureMessage(null)} severity="error" sx={{ width: '100%' }}>
+          {failureMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -12,9 +12,8 @@ export const login = createAsyncThunk('data/login', async (data: UserLoginType, 
     console.log('Logging in...');
     console.log("data", data);
     console.log("url", `${baseUrl}Auth/login`);
-    
-    const response = await axios.post(
-      `${baseUrl}Auth/login`,
+
+    const response = await axios.post(`${baseUrl}Auth/login`,
       {
         email: data.mail,
         password: data.password,
@@ -34,14 +33,13 @@ export const addUser = createAsyncThunk('data/addUser', async (data: UserRegiste
     console.log('Adding user...');
     console.log("data", data);
     console.log("url", `${baseUrl}Auth/register`);
-    
-    const response = await axios.post(
-      `${baseUrl}Auth/register`,
+
+    const response = await axios.post(`${baseUrl}Auth/register`,
       {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.mail,
-        password: data.password,
+        FirstName: data.firstName,
+        LastName: data.lastName,
+        Email: data.mail,
+        Password: data.password,
       }
     );
     console.log(response.data);

@@ -8,16 +8,19 @@ import { store } from './store/store';
 import HomePageMain from './components/HomePageMain';
 import DrawingApp from './components/DrawingApp';
 import ShowPainting from './components/ShowPainting';
+import { AuthProvider } from './components/AuthContext';
 
 
 const App = () => {
   return (
     <>
-    {/* <HomePageMain /> */}
-      {/* <HomePage/> */} 
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
+      {/* <HomePageMain /> */}
+      {/* <HomePage/> */}
+      <AuthProvider>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </AuthProvider>
       {/* <Category/> */}
       {/* <ShowPainting selectedImage={'../../public/images/5.png'} onClose={() => {}} /> */}
       {/* <DrawingApp backgroundImageUrl={'../../public/images/5.png'} /> */}
