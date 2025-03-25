@@ -12,8 +12,6 @@ namespace Children_s_drawing.Core.Entities
         public Guid Id { get; set; }
         public string FileName { get; set; }
         public string Url { get; set; }
-        public int Age { get; set; }
-        //public int UserId { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
 
@@ -21,8 +19,8 @@ namespace Children_s_drawing.Core.Entities
         public Guid UserId { get; set; }
         User User { get; set; }
 
-        [ForeignKey(nameof(Id))]
-        public string CategoryId { get; set; }
+        [ForeignKey(nameof(CategoryName))]
+        public string CategoryName { get; set; }
         public Category MyCategory { get; set; }
         public Painting()
         {

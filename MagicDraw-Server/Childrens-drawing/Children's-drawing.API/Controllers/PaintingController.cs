@@ -49,10 +49,10 @@ namespace Children_s_drawing.API.Controllers
         // POST api/<CategoryController>
         [HttpPost]
         [Authorize(Roles = "EditorOrAdmin")]
-        public async Task<ActionResult<PaintingDto>> Post([FromBody] PaintingPostModel painting)
+        public async Task<ActionResult<PaintingDto>> Post([FromForm] PaintingPostModel painting)
         {
             var paintingDto = _mapper.Map<PaintingDto>(painting);
-            paintingDto = await _paintingService.AddAsync(paintingDto);
+            paintingDto = await _paintingService.AddAsync(paintingDto, painting.ImageFile);
             if (paintingDto == null)
                 return NotFound();
             return paintingDto;

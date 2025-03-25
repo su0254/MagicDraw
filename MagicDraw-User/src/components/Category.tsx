@@ -63,16 +63,6 @@ console.log("category component",categories);
         gap: '15px', // Increased gap for better spacing
       }}
     >
-      <Typography
-        variant="h6"
-        sx={{
-          fontWeight: 'bold',
-          color: '#555',
-          marginBottom: '10px',
-        }}
-      >
-        Categories
-      </Typography>
       {categories.map((category, index) => (
         <Button
           key={index}

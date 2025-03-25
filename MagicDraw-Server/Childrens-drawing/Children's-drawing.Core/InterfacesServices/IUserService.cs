@@ -8,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace Children_s_drawing.Core.InterfacesServices
 {
-    public interface IUserService:IService<UserDto>
+    public interface IUserService
     {
-        
+        public Task<IEnumerable<UserDto>> GetAllAsync();
+        public Task<UserDto?> GetByIdAsync(Guid id);
+        public Task<bool> DeleteByIdAsync(Guid id);
+        public Task<UserDto?> UpdateByIdAsync(Guid id, UserDto userDto);
+        public Task<UserDto> AddAsync(UserDto userDto);
     }
 }

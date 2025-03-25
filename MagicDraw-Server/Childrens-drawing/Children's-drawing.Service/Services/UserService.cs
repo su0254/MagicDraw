@@ -11,7 +11,7 @@ using Childrens_drawing.Core.Dtos;
 
 namespace Children_s_drawing.Service.Services
 {
-    public class UserService : IUserService, IService<UserDto>
+    public class UserService : IUserService
     {
         readonly IRepositoryManager _repositoryManager;
         readonly IMapper _mapper;

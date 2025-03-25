@@ -11,7 +11,7 @@ using Childrens_drawing.Core.Dtos;
 
 namespace Children_s_drawing.Service.Services
 {
-    public class PaintedPaintingService : IPaintedPaintingService, IService<PaintedPaintingDto>
+    public class PaintedPaintingService : IPaintedPaintingService
     {
         readonly IRepositoryManager _repositoryManager;
         readonly IMapper _mapper;

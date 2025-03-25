@@ -1,17 +1,51 @@
-import React from 'react';
-import { AppBar, Toolbar, Button, Typography, Box, Container } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { AppBar, Toolbar, Button, Typography, Box, Container, TextField, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, InputLabel, FormControl, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Category from './Category';
 import HomePageMain from './HomePageMain';
 import { useAuth } from './AuthContext';
+import { fetchCategories } from '../store/slices/categorySlice'; // פעולה לשליפת קטגוריות
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store/store';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [openUploadDialog, setOpenUploadDialog] = useState(false); // State to manage the dialog visibility
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // State to store the selected file
+  const [paintingName, setPaintingName] = useState(''); // State to store the painting name
+  const [selectedCategory, setSelectedCategory] = useState(''); // State to store the selected category
+
+  const { list: categories, loading: categoriesLoading } = useSelector((state: RootState) => state.categories) as unknown as { list: { categoryName: string }[]; loading: boolean };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchCategories()); // Fetch categories when the user is logged in
+      console.log('Categories fetched:', categories);
+    }
+  }, [dispatch, isLoggedIn]);
 
   const handleLogout = () => {
     setIsLoggedIn(false); // עדכון מצב המשתמש ל"לא מחובר"
     navigate('/'); // חזרה לעמוד הבית
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleUpload = () => {
+    if (selectedFile && paintingName && selectedCategory) {
+      console.log('Uploading:', { paintingName, selectedCategory, selectedFile });
+      // Add logic to upload the file to the server
+      setOpenUploadDialog(false); // Close the dialog after upload
+    } else {
+      alert('Please fill in all fields.');
+    }
   };
 
   return (
@@ -142,24 +176,100 @@ const HomePage: React.FC = () => {
                 background: 'linear-gradient(135deg, #8fd3f4, #84fab0)',
               },
             }}
-            component="label"
+            onClick={() => setOpenUploadDialog(true)} // Open the dialog
           >
-            Upload Image
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={(event) => {
-                if (event.target.files && event.target.files.length > 0) {
-                  console.log(event.target.files[0]);
-                }
-              }}
-            />
+            העלאת ציור
           </Button>
         )}
       </Container>
       <Category />
       <HomePageMain />
+
+      {/* Dialog for uploading a painting */}
+      <Dialog open={openUploadDialog} onClose={() => setOpenUploadDialog(false)}>
+        <DialogTitle>העלאת ציור</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="שם הציור"
+            fullWidth
+            margin="normal"
+            value={paintingName}
+            onChange={(e) => setPaintingName(e.target.value)}
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="category-label">קטגוריה</InputLabel>
+            <Select
+              labelId="category-label"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 200, // גובה מקסימלי לגלילה
+                    overflowY: 'auto', // גלילה אנכית
+                  },
+                },
+              }}
+              sx={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '10px',
+                boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+              }}
+            >
+              {categoriesLoading ? (
+                <MenuItem disabled>
+                  <CircularProgress size={20} />
+                </MenuItem>
+              ) : (
+                categories.map((category, index) => (
+                  <MenuItem
+                    key={index}
+                    value={category.categoryName}
+                    sx={{
+                      fontWeight: 'bold',
+                      color: '#555',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
+                        color: '#fff',
+                      },
+                    }}
+                  >
+                    {category.categoryName}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              marginTop: '10px',
+              background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
+              color: '#fff',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #8fd3f4, #84fab0)',
+              },
+            }}
+          >
+            בחר קובץ
+            <input type="file" accept="image/*" hidden onChange={handleFileChange} />
+          </Button>
+          {selectedFile && (
+            <Typography variant="body2" sx={{ marginTop: '10px' }}>
+              קובץ שנבחר: {selectedFile.name}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenUploadDialog(false)} color="secondary">
+            ביטול
+          </Button>
+          <Button onClick={handleUpload} color="primary">
+            העלאה
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

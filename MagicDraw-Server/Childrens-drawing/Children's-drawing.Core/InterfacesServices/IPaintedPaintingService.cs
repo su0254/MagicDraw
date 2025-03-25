@@ -8,7 +8,12 @@ using System.Threading.Tasks;
 
 namespace Children_s_drawing.Core.InterfacesServices
 {
-    public interface IPaintedPaintingService:IService<PaintedPaintingDto>
+    public interface IPaintedPaintingService
     {
+        public Task<IEnumerable<PaintedPaintingDto>> GetAllAsync();
+        public Task<PaintedPaintingDto?> GetByIdAsync(Guid id);
+        public Task<bool> DeleteByIdAsync(Guid id);
+        public Task<PaintedPaintingDto?> UpdateByIdAsync(Guid id, PaintedPaintingDto paintedPaintingDto);
+        public Task<PaintedPaintingDto> AddAsync(PaintedPaintingDto paintedPaintingDto);
     }
 }
