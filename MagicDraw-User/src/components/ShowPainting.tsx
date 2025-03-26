@@ -19,6 +19,8 @@ const ShowPainting: React.FC<ShowPaintingProps> = () => {
   const { selectedImage } = location.state || {};
 
   const handleNavigateToDrawingApp = () => {
+    console.log(selectedImage);
+    
     navigate('/drawing-app', { state: { backgroundImageUrl: selectedImage } });
   };
 

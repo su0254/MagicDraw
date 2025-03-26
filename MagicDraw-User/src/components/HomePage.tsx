@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Category from './Category';
 import HomePageMain from './HomePageMain';
 import { useAuth } from './AuthContext';
-import { fetchCategories } from '../store/slices/categorySlice'; // פעולה לשליפת קטגוריות
+import { fetchCategories } from '../store/slices/categorySlice';
+import { addPainting } from '../store/slices/paintingsSlice'; // ייבוא הפעולה להעלאת ציור
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 
@@ -23,7 +24,6 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     if (isLoggedIn) {
       dispatch(fetchCategories()); // Fetch categories when the user is logged in
-      console.log('Categories fetched:', categories);
     }
   }, [dispatch, isLoggedIn]);
 
@@ -38,13 +38,31 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
+    const userId = localStorage.getItem('userId') || '';
+    console.log('category', selectedCategory);
+
     if (selectedFile && paintingName && selectedCategory) {
-      console.log('Uploading:', { paintingName, selectedCategory, selectedFile });
-      // Add logic to upload the file to the server
-      setOpenUploadDialog(false); // Close the dialog after upload
+      const formData = {
+        fileName: paintingName,
+        categoryName: selectedCategory,
+        userId: userId,
+        imageFile: selectedFile
+      };
+
+      try {
+        await dispatch(addPainting(formData)); // קריאת API להעלאת הציור
+        alert('הציור הועלה בהצלחה!');
+        setOpenUploadDialog(false); // סגירת הדיאלוג לאחר העלאה מוצלחת
+        setPaintingName(''); // איפוס השדות
+        setSelectedCategory('');
+        setSelectedFile(null);
+      } catch (error) {
+        console.error('שגיאה בהעלאת הציור:', error);
+        alert('אירעה שגיאה בהעלאת הציור. נסה שוב.');
+      }
     } else {
-      alert('Please fill in all fields.');
+      alert('אנא מלא את כל השדות.');
     }
   };
 
@@ -77,6 +95,40 @@ const HomePage: React.FC = () => {
             Art Gallery
           </Typography>
           <Box>
+            {isLoggedIn && (
+              <>
+                <Button
+                  sx={{
+                    margin: '0 10px',
+                    fontWeight: 'bold',
+                    borderRadius: '20px',
+                    background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
+                    color: '#fff',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #8fd3f4, #84fab0)',
+                    },
+                  }}
+                  onClick={() => navigate('/personal-area')}
+                >
+                  Personal Area
+                </Button>
+                <Button
+                  sx={{
+                    margin: '0 10px',
+                    fontWeight: 'bold',
+                    borderRadius: '20px',
+                    background: 'linear-gradient(135deg, #a18cd1, #fbc2eb)',
+                    color: '#fff',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #fbc2eb, #a18cd1)',
+                    },
+                  }}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </>
+            )}
             {!isLoggedIn && (
               <>
                 <Button
@@ -110,23 +162,6 @@ const HomePage: React.FC = () => {
                   Login
                 </Button>
               </>
-            )}
-            {isLoggedIn && (
-              <Button
-                sx={{
-                  margin: '0 10px',
-                  fontWeight: 'bold',
-                  borderRadius: '20px',
-                  background: 'linear-gradient(135deg, #a18cd1, #fbc2eb)',
-                  color: '#fff',
-                  '&:hover': {
-                    background: 'linear-gradient(135deg, #fbc2eb, #a18cd1)',
-                  },
-                }}
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
             )}
           </Box>
         </Toolbar>

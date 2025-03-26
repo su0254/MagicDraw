@@ -11,7 +11,7 @@ const Category: React.FC = () => {
   useEffect(() => {
     dispatch(fetchCategories()); // Fetch categories on component mount
   }, [dispatch]);
-console.log("category component",categories);
+// console.log("category component",categories);
 
   // Define pastel gradients for each category
   const gradients = [

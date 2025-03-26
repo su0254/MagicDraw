@@ -21,6 +21,7 @@ export const login = createAsyncThunk('data/login', async (data: UserLoginType, 
     );
     console.log(response);
     sessionStorage.setItem('authToken', response.data.token);
+    localStorage.setItem('userId', response.data.user.id);
     return response.data; // Ensure this matches your API response structure
   } catch (e: any) {
     return thunkAPI.rejectWithValue(e.message);

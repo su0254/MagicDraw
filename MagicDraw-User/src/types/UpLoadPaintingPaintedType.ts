@@ -1,6 +1,5 @@
-export type UpLoadPaintingType = {
+export type UpLoadPaintingPaintedType = {
     fileName:string,
-    categoryName:string,
     userId:string
     imageFile:File
 };

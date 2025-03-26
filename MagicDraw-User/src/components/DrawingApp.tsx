@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // הוספת useNavigate
+import { useLocation, useNavigate } from 'react-router-dom';
 import CanvasDraw from 'react-canvas-draw';
 import { Box, Button, Slider, Typography, Input, Paper, Switch, FormControlLabel } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store/store';
+import { addPaintedPainting } from '../store/slices/paintingPaintedSlice';
+import { UpLoadPaintingPaintedType } from '../types/UpLoadPaintingPaintedType';
 
-interface DrawingAppProps {
-  backgroundImageUrl: string;
-}
-
-const DrawingApp: React.FC<DrawingAppProps> = () => {
+const DrawingApp: React.FC = () => {
   const [brushColor, setBrushColor] = useState<string>("#000");
   const [brushRadius, setBrushRadius] = useState<number>(5);
   const [isEraser, setIsEraser] = useState<boolean>(false);
@@ -15,7 +15,8 @@ const DrawingApp: React.FC<DrawingAppProps> = () => {
   const canvasRef = useRef<CanvasDraw>(null);
 
   const location = useLocation();
-  const navigate = useNavigate(); // יצירת navigate
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const { backgroundImageUrl } = location.state || {};
 
   useEffect(() => {
@@ -23,12 +24,11 @@ const DrawingApp: React.FC<DrawingAppProps> = () => {
       const img = new Image();
       img.src = backgroundImageUrl;
       img.onload = () => {
-        const maxWidth = 800; // רוחב מקסימלי
-        const maxHeight = 600; // גובה מקסימלי
+        const maxWidth = 800;
+        const maxHeight = 600;
         let width = img.width;
         let height = img.height;
 
-        // התאמת הגודל כך שיתאים למגבלות תוך שמירה על יחס הגובה-רוחב
         if (width > maxWidth) {
           const scaleFactor = maxWidth / width;
           width = maxWidth;
@@ -57,14 +57,14 @@ const DrawingApp: React.FC<DrawingAppProps> = () => {
     setIsEraser(!isEraser);
   };
 
-  const saveImage = () => {
+  const saveToDatabase = async () => {
     if (canvasRef.current) {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 
       const img = new Image();
       img.src = backgroundImageUrl;
-      img.onload = () => {
+      img.onload = async () => {
         canvas.width = img.width;
         canvas.height = img.height;
 
@@ -73,46 +73,24 @@ const DrawingApp: React.FC<DrawingAppProps> = () => {
         const drawingData = canvasRef.current?.getDataURL("image/png");
         const drawingImg = new Image();
         drawingImg.src = drawingData;
-        drawingImg.onload = () => {
-          ctx?.drawImage(drawingImg, 0, 0);
-
-          const finalImage = canvas.toDataURL("image/png");
-          const link = document.createElement('a');
-          link.href = finalImage;
-          link.download = 'combined_image.png';
-          link.click();
-        };
-      };
-    }
-  };
-
-  const printImage = () => {
-    if (canvasRef.current) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      const img = new Image();
-      img.src = backgroundImageUrl;
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-
-        ctx?.drawImage(img, 0, 0);
-
-        const drawingData = canvasRef.current?.getDataURL("image/png");
-        const drawingImg = new Image();
-        drawingImg.src = drawingData;
-        drawingImg.onload = () => {
+        drawingImg.onload = async () => {
           ctx?.drawImage(drawingImg, 0, 0);
 
           const finalImage = canvas.toDataURL("image/png");
 
-          const printWindow = window.open('', '_blank');
-          if (printWindow) {
-            printWindow.document.write(`<img src="${finalImage}" />`);
-            printWindow.document.close();
-            printWindow.print();
-          }
+          const response = await fetch(finalImage);
+          const blob = await response.blob();
+          const file = new File([blob], "painted_drawing.png", { type: "image/png" });
+
+          const paintingData: UpLoadPaintingPaintedType = {
+            userId: localStorage.getItem('userId') || '',
+            fileName: '12345',
+            imageFile: file,
+          };
+
+          await dispatch(addPaintedPainting(paintingData));
+
+          alert('The painted drawing has been saved to the database!');
         };
       };
     }
@@ -125,7 +103,7 @@ const DrawingApp: React.FC<DrawingAppProps> = () => {
   };
 
   const goToHomePage = () => {
-    navigate('/'); // ניווט לעמוד הבית
+    navigate('/');
   };
 
   return (
@@ -210,25 +188,14 @@ const DrawingApp: React.FC<DrawingAppProps> = () => {
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
             <Button
               variant="contained"
-              onClick={saveImage}
+              onClick={saveToDatabase}
               sx={{
                 background: 'linear-gradient(135deg, #a18cd1, #fbc2eb)',
                 color: '#fff',
                 '&:hover': { background: 'linear-gradient(135deg, #fbc2eb, #a18cd1)' },
               }}
             >
-              Save Image
-            </Button>
-            <Button
-              variant="contained"
-              onClick={printImage}
-              sx={{
-                background: 'linear-gradient(135deg, #fbc2eb, #a18cd1)',
-                color: '#fff',
-                '&:hover': { background: 'linear-gradient(135deg, #a18cd1, #fbc2eb)' },
-              }}
-            >
-              Print Image
+              Save to Database
             </Button>
             <Button
               variant="contained"
