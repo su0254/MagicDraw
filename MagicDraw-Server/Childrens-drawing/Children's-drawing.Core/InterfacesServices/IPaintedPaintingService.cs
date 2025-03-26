@@ -1,5 +1,6 @@
 ﻿using Children_s_drawing.Core.Entities;
 using Childrens_drawing.Core.Dtos;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,6 @@ namespace Children_s_drawing.Core.InterfacesServices
         public Task<PaintedPaintingDto?> GetByIdAsync(Guid id);
         public Task<bool> DeleteByIdAsync(Guid id);
         public Task<PaintedPaintingDto?> UpdateByIdAsync(Guid id, PaintedPaintingDto paintedPaintingDto);
-        public Task<PaintedPaintingDto> AddAsync(PaintedPaintingDto paintedPaintingDto);
+        public Task<PaintedPaintingDto> AddAsync(PaintedPaintingDto paintedPaintingDto, IFormFile image);
     }
 }

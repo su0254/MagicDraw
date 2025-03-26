@@ -13,10 +13,9 @@ namespace Children_s_drawing.Data.Repositories
     {
         public CategoryRepository(DataContext dataContext) : base(dataContext) { }
 
-        public async Task<Category> GetByNameAsync(string categoryName)
+        public async Task<Category?> GetByNameAsync(string categoryName)
         {
-            return await _dbSet
-                .FirstOrDefaultAsync(c => c.CategoryName.Equals(categoryName));
+            return await _dbSet.FirstOrDefaultAsync(c => c.CategoryName.Equals(categoryName));
         }
 
     }

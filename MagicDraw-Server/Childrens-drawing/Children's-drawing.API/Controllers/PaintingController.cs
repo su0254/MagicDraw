@@ -48,7 +48,7 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        [Authorize(Roles = "EditorOrAdmin")]
+        //[Authorize(Roles = "EditorOrAdmin")]
         public async Task<ActionResult<PaintingDto>> Post([FromForm] PaintingPostModel painting)
         {
             var paintingDto = _mapper.Map<PaintingDto>(painting);

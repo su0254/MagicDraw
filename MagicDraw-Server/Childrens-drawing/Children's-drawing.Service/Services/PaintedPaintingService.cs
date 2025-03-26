@@ -8,6 +8,9 @@ using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
 using Children_s_drawing.Core.InterfacesServices;
 using Childrens_drawing.Core.Dtos;
+using Childrens_drawing.Service.Services;
+using Microsoft.AspNetCore.Http;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Children_s_drawing.Service.Services
 {
@@ -15,13 +18,14 @@ namespace Children_s_drawing.Service.Services
     {
         readonly IRepositoryManager _repositoryManager;
         readonly IMapper _mapper;
+        readonly UpLoadPainting _upLoadPainting = new UpLoadPainting();
         public PaintedPaintingService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
 
-        public async Task<PaintedPaintingDto> AddAsync(PaintedPaintingDto paintedPaintingDto)
+        public async Task<PaintedPaintingDto> AddAsync(PaintedPaintingDto paintedPaintingDto, IFormFile image)
         {
             var p = _mapper.Map<PaintedPainting>(paintedPaintingDto);
 
@@ -31,6 +35,10 @@ namespace Children_s_drawing.Service.Services
                 throw new Exception("User not found");
             }
             user.PaintedPaintings.Add(p);
+            var url = await _upLoadPainting.UploadToCloud(image);
+            if (url == null)
+                return null;
+            p.Url = url.ToString();
 
             p = await _repositoryManager._paintedPaintingRepository.AddAsync(p);
             if (p != null)

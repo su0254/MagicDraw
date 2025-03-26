@@ -9,6 +9,7 @@ using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
 using Children_s_drawing.Core.InterfacesServices;
 using Childrens_drawing.Core.Dtos;
+using Childrens_drawing.Service.Services;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using dotenv.net;
@@ -21,6 +22,7 @@ namespace Children_s_drawing.Service.Services
     {
         readonly IRepositoryManager _repositoryManager;
         readonly IMapper _mapper;
+        readonly UpLoadPainting _upLoadPainting = new UpLoadPainting();
 
         public PaintingService(IRepositoryManager repositoryManager, IMapper mapper)
         {
@@ -37,8 +39,8 @@ namespace Children_s_drawing.Service.Services
                 throw new Exception("User not found");
             }
             user.Paintings.Add(painting);
-
-            var category = await _repositoryManager._categoryRepository.GetByNameAsync(paintingDto.Category);
+            Console.WriteLine(painting.CategoryName);
+            var category = await _repositoryManager._categoryRepository.GetByNameAsync(painting.CategoryName);
             if (category == null)
             {
                 throw new Exception("Category not found");
@@ -47,7 +49,7 @@ namespace Children_s_drawing.Service.Services
 
             // Set the CategoryId property
             painting.CategoryName = category.CategoryName;
-            var url = await UploadToCloud(image);
+            var url = await _upLoadPainting.UploadToCloud(image);
             if (url == null)
                 return null;
             painting.Url = url.ToString();
@@ -92,49 +94,7 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<PaintingDto>(painting);
         }
 
-        private async Task<Uri> UploadToCloud(IFormFile imageFile)
-        {
-            // טען את קובץ ה-.env
-            DotEnv.Load();
-            Console.WriteLine(Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME"));
-            // קבל את הערכים
-            var cloudName = Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME");
-            var apiKey = Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY");
-            var apiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET");
-
-            // הגדרות עם הנתונים שלך (החלף עם הערכים האמיתיים שלך)
-            var account = new Account(
-                cloudName,      // שנה לערך מה-Cloudinary Dashboard
-                apiKey,         // שנה לערך מה-Cloudinary Dashboard
-                apiSecret       // שנה לערך מה-Cloudinary Dashboard
-            );
-
-            var cloudinary = new Cloudinary(account);
-            cloudinary.Api.Secure = true; // שימוש ב-HTTPS
-            try
-            {
-                using (var stream = new MemoryStream())
-                {
-                    await imageFile.CopyToAsync(stream); // העתקת הקובץ ל-MemoryStream
-                    stream.Position = 0; // החזרת המצביע להתחלה
-
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(imageFile.FileName, stream),
-                        PublicId = imageFile.FileName,  // שם הקובץ בענן
-                        Overwrite = false,  // מחיקת קובץ קודם עם אותו שם
-                        Transformation = new Transformation().Width(500).Height(500).Crop("limit") // שינוי גודל
-                    };
-                    var uploadResult = await cloudinary.UploadAsync(uploadParams);
-                    return uploadResult.SecureUrl;
-                }
-            }
-            catch (Exception)
-            {
-                //Console.WriteLine(ex.Message);
-                return null;
-            }
-        }
+        
         
     }
 }
