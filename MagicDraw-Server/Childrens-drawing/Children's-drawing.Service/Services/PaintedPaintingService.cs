@@ -76,5 +76,11 @@ namespace Children_s_drawing.Service.Services
                 await _repositoryManager.SaveAsync();
             return _mapper.Map<PaintedPaintingDto>(paintedPainting);
         }
+
+        public async Task<IEnumerable<PaintedPaintingDto>> GetByUserIdAsync(Guid userId)
+        {
+            var paintedPaintings = await _repositoryManager._paintedPaintingRepository.GetByUserIdAsync(userId);
+            return _mapper.Map<IEnumerable<PaintedPaintingDto>>(paintedPaintings);
+        }
     }
 }

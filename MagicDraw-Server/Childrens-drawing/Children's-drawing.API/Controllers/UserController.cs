@@ -36,7 +36,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        [Authorize(Roles= "EditorOrAdmin")]
+        //[Authorize(Roles= "EditorOrAdmin")]
         public async Task<ActionResult<UserDto>> Get(Guid id)
         {
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

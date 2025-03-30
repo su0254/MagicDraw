@@ -9,5 +9,6 @@ namespace Children_s_drawing.Core.InterfacesRepositories
 {
     public interface IPaintedPaintingRepository:IRepository<PaintedPainting>
     {
+        public Task<IEnumerable<PaintedPainting>> GetByUserIdAsync(Guid userId);
     }
 }

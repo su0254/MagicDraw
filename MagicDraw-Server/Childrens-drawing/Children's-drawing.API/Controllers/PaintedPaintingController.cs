@@ -47,7 +47,7 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        [Authorize(Roles = "EditorOrAdmin")]
+        //[Authorize(Roles = "EditorOrAdmin")]
         public async Task<ActionResult<PaintedPaintingDto>> Post([FromForm] PaintedPaintingPostModel paintedPainting)
         {
             var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
@@ -76,5 +76,12 @@ namespace Children_s_drawing.API.Controllers
         {
             return await _paintedPaintingService.DeleteByIdAsync(id);
         }
+
+        [HttpGet("paintedPaintings/user/{userId}")]
+        public async Task<IEnumerable<PaintedPaintingDto>> GetByUserIdAsync(Guid userId)
+        {
+            return await _paintedPaintingService.GetByUserIdAsync(userId);
+        }
+
     }
 }
