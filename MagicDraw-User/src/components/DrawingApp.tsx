@@ -63,6 +63,7 @@ const DrawingApp: React.FC = () => {
       const ctx = canvas.getContext('2d');
 
       const img = new Image();
+      img.crossOrigin = 'anonymous';
       img.src = backgroundImageUrl;
       img.onload = async () => {
         canvas.width = img.width;
@@ -91,6 +92,38 @@ const DrawingApp: React.FC = () => {
           await dispatch(addPaintedPainting(paintingData));
 
           alert('The painted drawing has been saved to the database!');
+        };
+      };
+    }
+  };
+
+  const downloadImage = (format: 'png' | 'jpg' = 'png') => {
+    if (canvasRef.current) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+  
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = backgroundImageUrl;
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+  
+        ctx?.drawImage(img, 0, 0);
+  
+        const drawingData = canvasRef.current?.getDataURL("image/png");
+        const drawingImg = new Image();
+        drawingImg.src = drawingData;
+        drawingImg.onload = () => {
+          ctx?.drawImage(drawingImg, 0, 0);
+  
+          const finalImage = canvas.toDataURL(`image/${format}`);
+  
+          // יצירת קישור להורדה
+          const link = document.createElement('a');
+          link.href = finalImage;
+          link.download = `painted_drawing.${format}`;
+          link.click();
         };
       };
     }
@@ -195,8 +228,19 @@ const DrawingApp: React.FC = () => {
                 '&:hover': { background: 'linear-gradient(135deg, #fbc2eb, #a18cd1)' },
               }}
             >
-              Save to Database
+              שמירה
             </Button>
+            <Button
+    variant="contained"
+    onClick={downloadImage}
+    sx={{
+      background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
+      color: '#fff',
+      '&:hover': { background: 'linear-gradient(135deg, #8fd3f4, #84fab0)' },
+    }}
+  >
+    להורדת התמונה
+  </Button>
             <Button
               variant="contained"
               onClick={clearCanvas}
@@ -206,7 +250,7 @@ const DrawingApp: React.FC = () => {
                 '&:hover': { background: 'linear-gradient(135deg, #8fd3f4, #84fab0)' },
               }}
             >
-              Clear
+              ניקוי הכל
             </Button>
             <Button
               variant="contained"
@@ -217,7 +261,7 @@ const DrawingApp: React.FC = () => {
                 '&:hover': { background: 'linear-gradient(135deg, #fad0c4, #ff9a9e)' },
               }}
             >
-              Go to Home
+              חזרה לדף הבית
             </Button>
           </Box>
         </Box>

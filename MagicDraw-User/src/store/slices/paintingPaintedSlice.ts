@@ -32,10 +32,15 @@ export const addPaintedPainting = createAsyncThunk(
 // Async thunk for fetching painted paintings by user ID
 export const fetchPaintedPaintingsByUser = createAsyncThunk(
   'paintedPaintings/fetchByUser',
-  async (userId: string, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const response = await axios.get(`${baseUrl}PaintedPainting/user/${userId}`);
-      return response.data; // Return the list of painted paintings
+      const userId = localStorage.getItem('userId'); // שליפת מזהה המשתמש מ-localStorage
+      if (!userId) {
+        throw new Error('User ID not found in localStorage');
+      }
+
+      const response = await axios.get(`${baseUrl}PaintedPainting/paintedPaintings/user/${userId}`);
+      return response.data; // החזרת רשימת הציורים הצבועים
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }

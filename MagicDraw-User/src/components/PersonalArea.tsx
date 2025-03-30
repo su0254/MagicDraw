@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, TextField, Grid, Card, CardMedia, CardContent, CardActionArea } from '@mui/material';
+import { Box, Typography, Button, TextField, CircularProgress } from '@mui/material';
 import { AppDispatch, RootState } from '../store/store';
 import { fetchPaintedPaintingsByUser } from '../store/slices/paintingPaintedSlice';
 import axios from 'axios';
+
+const gradients = [
+  'linear-gradient(135deg, #84fab0, #8fd3f4)', // Green-Blue
+  'linear-gradient(135deg, #ff9a9e, #fad0c4)', // Pink
+  'linear-gradient(135deg, #a18cd1, #fbc2eb)', // Purple-Pink
+];
 
 const PersonalArea: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,16 +24,23 @@ const PersonalArea: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const { list: paintedPaintings, loading, error } = useSelector(
-    (state: RootState) => state.paintingsPainted
+    (state: RootState) => state.paintedPaintings
   );
 
   const userId = localStorage.getItem('userId') || '';
+  const token=sessionStorage.getItem('token');
 
   // Fetch user details
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5058/api/User/${userId}`);
+        const response = await axios.get(`http://localhost:5058/api/User/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // החלף ב-token שלך
+            'Content-Type': 'application/json'
+          },
+        });
+        
         setUserDetails(response.data);
       } catch (error) {
         console.error('Error fetching user details:', error);
@@ -35,7 +48,7 @@ const PersonalArea: React.FC = () => {
     };
 
     fetchUserDetails();
-    dispatch(fetchPaintedPaintingsByUser(userId));
+    dispatch(fetchPaintedPaintingsByUser());
   }, [dispatch, userId]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,8 +70,8 @@ const PersonalArea: React.FC = () => {
     }
   };
 
-  const handlePaintingClick = (paintingId: string) => {
-    navigate('/show-painting', { state: { paintingId } });
+  const handlePaintingClick = (imagePath: string) => {
+    navigate('/show-painting', { state: { selectedImage: imagePath } });
   };
 
   return (
@@ -122,31 +135,67 @@ const PersonalArea: React.FC = () => {
           Your Painted Paintings
         </Typography>
         {loading ? (
-          <Typography>Loading...</Typography>
+          <CircularProgress />
         ) : error ? (
           <Typography color="error">Error: {error}</Typography>
         ) : paintedPaintings.length === 0 ? (
           <Typography>No painted paintings found.</Typography>
         ) : (
-          <Grid container spacing={3}>
-            {paintedPaintings.map((painting) => (
-              <Grid item xs={12} sm={6} md={4} key={painting.id}>
-                <Card>
-                  <CardActionArea onClick={() => handlePaintingClick(painting.id)}>
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={painting.imageUrl} // Assuming `imageUrl` is the property for the painting's image
-                      alt={painting.name}
-                    />
-                    <CardContent>
-                      <Typography variant="h6">{painting.name}</Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '20px',
+              justifyContent: 'center',
+              marginTop: '20px',
+            }}
+          >
+            {paintedPaintings.map((painting, index) => (
+              <Box
+                key={painting.id}
+                sx={{
+                  cursor: 'pointer',
+                  borderRadius: '15px',
+                  overflow: 'hidden',
+                  width: '200px',
+                  height: '250px',
+                  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+                  transition: 'transform 0.3s, box-shadow 0.3s',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    boxShadow: '0 6px 15px rgba(0, 0, 0, 0.3)',
+                  },
+                }}
+                onClick={() => handlePaintingClick(painting.url)}
+              >
+                <img
+                  src={painting.url} // Assuming `imageUrl` is the property for the painting's image
+                  alt={painting.fileName}
+                  style={{
+                    width: '100%',
+                    height: '70%',
+                    objectFit: 'cover',
+                    borderTopLeftRadius: '15px',
+                    borderTopRightRadius: '15px',
+                  }}
+                />
+                <Box
+                  sx={{
+                    background: gradients[index % gradients.length],
+                    color: 'white',
+                    textAlign: 'center',
+                    padding: '10px',
+                    height: '30%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {painting.fileName}
+                </Box>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         )}
       </Box>
     </Box>

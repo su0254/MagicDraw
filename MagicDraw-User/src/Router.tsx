@@ -15,6 +15,6 @@ export const router = createBrowserRouter([
   { path: "register", element: <Register />, errorElement: <div>Eror</div> },
   { path: "category", element: <Category />, errorElement: <div>Eror</div> },
   { path: '/show-painting', element: <ShowPainting selectedImage="defaultImage.jpg" />, errorElement: <div>Error</div> },
-  { path: '/drawing-app', element: <DrawingApp backgroundImageUrl={""} />, errorElement: <div>Error</div> },
+  { path: '/drawing-app', element: <DrawingApp/>, errorElement: <div>Error</div> },
   { path: "/personal-area", element: <PersonalArea />, errorElement: <div>Eror</div> },
 ]);

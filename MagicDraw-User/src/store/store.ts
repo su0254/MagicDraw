@@ -9,7 +9,7 @@ export const store = configureStore({
     auth: authSlice, // Add the auth reducer
     categories: categorySlice, // Add the category reducer
     paintings: paintingsSlice, // Add the paintings reducer
-    paintingsPainted: paintingPaintedSlice, // Add the paintingsPainted reducer
+    paintedPaintings: paintingPaintedSlice, // Add the paintingsPainted reducer
   },
 });
 
