@@ -44,6 +44,19 @@ export const fetchPaintings = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching paintings by category
+export const fetchPaintingsByCategory = createAsyncThunk(
+  'paintings/fetchByCategory',
+  async (categoryId: string, thunkAPI) => {
+    try {
+      const response = await axios.get(`${baseUrl}Painting/Category/${categoryId}`);
+      return response.data; // Return the list of paintings for the given category
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 // Create the slice
 const paintingsSlice = createSlice({
   name: 'paintings',
@@ -78,6 +91,19 @@ const paintingsSlice = createSlice({
         state.list = action.payload; // Update the list with fetched paintings
       })
       .addCase(fetchPaintings.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // Fetch paintings by category
+      .addCase(fetchPaintingsByCategory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPaintingsByCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.list = action.payload; // Update the list with paintings for the given category
+      })
+      .addCase(fetchPaintingsByCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
