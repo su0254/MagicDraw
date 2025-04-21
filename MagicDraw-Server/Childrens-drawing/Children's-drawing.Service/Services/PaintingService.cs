@@ -94,7 +94,25 @@ namespace Children_s_drawing.Service.Services
             return _mapper.Map<PaintingDto>(painting);
         }
 
-        
-        
+        public async Task<IEnumerable<Painting>> GetPaintingsByCategoryAsync(string categoryName)
+        {
+            if(string.IsNullOrEmpty(categoryName))
+            {
+                return await Task.FromResult<IEnumerable<Painting>>(new List<Painting>());
+            }
+            // Check if the category exists
+            var category = _repositoryManager._categoryRepository.GetByNameAsync(categoryName);
+            if (category == null)
+            {
+                return await Task.FromResult<IEnumerable<Painting>>(new List<Painting>());
+            }
+
+            var paintings = await _repositoryManager._paintingRepository.GetPaintingsByCategoryAsync(categoryName);
+            if(paintings !=null)
+                await _repositoryManager.SaveAsync();
+            return paintings;
+        }
+
+
     }
 }

@@ -80,5 +80,14 @@ namespace Children_s_drawing.API.Controllers
         {
             return await _paintingService.DeleteByIdAsync(id);
         }
+
+        [HttpGet("GetByCategory/{categoryName}")]
+        public async Task<ActionResult<IEnumerable<PaintingDto>>> GetByCategory(string categoryName)
+        {
+            var paintings = await _paintingService.GetPaintingsByCategoryAsync(categoryName);
+            if (paintings == null)
+                return NotFound();
+            return Ok(paintings);
+        }
     }
 }

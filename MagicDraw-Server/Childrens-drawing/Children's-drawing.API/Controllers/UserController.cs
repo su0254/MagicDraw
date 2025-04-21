@@ -39,9 +39,9 @@ namespace Children_s_drawing.API.Controllers
         //[Authorize(Roles= "EditorOrAdmin")]
         public async Task<ActionResult<UserDto>> Get(Guid id)
         {
-            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (id.ToString() != currentUserId && !User.IsInRole("Admin"))
-                return Forbid();
+            //var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (id.ToString() != currentUserId && !User.IsInRole("Admin"))
+            //    return Forbid();
 
             var u = await _userService.GetByIdAsync(id);
             if (u == null)
@@ -64,12 +64,12 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        [Authorize(Roles = "EditorOrAdmin")]
+        //[Authorize(Roles = "EditorOrAdmin")]
         public async Task<ActionResult<UserDto>> Put(Guid id, [FromBody] UserPostModel user)
         {
-            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (id.ToString() != currentUserId && !User.IsInRole("Admin"))
-                return Forbid();
+            //var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (id.ToString() != currentUserId && !User.IsInRole("Admin"))
+            //    return Forbid();
 
             var userDto = _mapper.Map<UserDto>(user);
             userDto = await _userService.UpdateByIdAsync(id, userDto);

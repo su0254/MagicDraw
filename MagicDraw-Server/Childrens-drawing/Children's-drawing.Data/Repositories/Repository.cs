@@ -49,34 +49,27 @@ namespace Children_s_drawing.Data.Repositories
         {
             var temp_entity = await GetByIdAsync(id);
             if (temp_entity == null)
-                return null;
+                return entity;
 
-            //var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            //                                        .Where(property => property.Name != "Id");
-            //foreach (var property in properties)
-            //{
-            //    var value = property.GetValue(entity);
-            //    if (value != null)
-            //    {
-            //        property.SetValue(entity, value);
-            //    }
-            //}
+            var idProperty = typeof(T).GetProperty("Id");
+            if (idProperty != null && idProperty.CanWrite)
+            {
+                idProperty.SetValue(temp_entity, id);
+            }
 
-            var properties = typeof(T).GetProperties();
-
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                                    .Where(property => property.Name != "Id");
+            
             foreach (var property in properties)
             {
-                if (property.CanWrite && property.GetCustomAttribute<KeyAttribute>() == null)
+                var value = property.GetValue(entity);
+                if (value != null)
                 {
-                    if (property.Name != "Id")
-                    {
-                        var value = property.GetValue(temp_entity);
-                        if (value != null)
-                            property.SetValue(entity, value);
-                    }
+                    property.SetValue(temp_entity, value);
                 }
             }
-            return entity;
+
+            return temp_entity;
         }
     }
 }

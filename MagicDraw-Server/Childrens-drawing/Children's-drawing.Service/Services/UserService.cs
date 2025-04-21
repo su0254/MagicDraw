@@ -62,8 +62,6 @@ namespace Children_s_drawing.Service.Services
             return false; // אם המשתמש לא נמצא
         }
 
-
-
         public async Task<UserDto?> UpdateByIdAsync(Guid id, UserDto u)
         {
             var user = _mapper.Map<User>(u);

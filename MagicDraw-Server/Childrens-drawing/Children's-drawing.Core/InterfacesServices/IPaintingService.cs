@@ -16,5 +16,7 @@ namespace Children_s_drawing.Core.InterfacesServices
         public Task<bool> DeleteByIdAsync(Guid id);
         public Task<PaintingDto?> UpdateByIdAsync(Guid id, PaintingDto paintingDto);
         public Task<PaintingDto> AddAsync(PaintingDto paintingDto, IFormFile image);
+        public Task<IEnumerable<Painting>> GetPaintingsByCategoryAsync(string categoryName);
+
     }
 }
