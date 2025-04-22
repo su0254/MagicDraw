@@ -11,17 +11,20 @@ export const addPaintedPainting = createAsyncThunk(
   async (paintingData: UpLoadPaintingPaintedType, thunkAPI) => {
     try {
         paintingData.userId = localStorage.getItem('userId') as string;
+        console.log('paintingData', paintingData);
+        
         const formData = new FormData();
         Object.entries(paintingData).forEach(([key, value]) => {
           formData.append(key, value);
         });
-
+        console.log('formData', formData);
+        
       const response = await axios.post(`${baseUrl}PaintedPainting`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-        },
+        }
       });
-
+      console.log('response', response.data);
       return response.data; // Return the response data
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
