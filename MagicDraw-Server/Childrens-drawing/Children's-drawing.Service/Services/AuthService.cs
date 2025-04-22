@@ -88,6 +88,7 @@ namespace Childrens_drawing.Service.Services
                 LastName = userDto.LastName,
                 Email = userDto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
+                //Password = userDto.Password,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 Roles = new List<Role> { new Role { RoleName = "Editor" } }

@@ -25,7 +25,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET: api/<CategoryController>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDto>>> Get()
         {
             var users = await _userService.GetAllAsync();

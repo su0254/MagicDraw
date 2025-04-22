@@ -57,8 +57,9 @@ namespace Children_s_drawing.Data.Repositories
                 idProperty.SetValue(temp_entity, id);
             }
 
+
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                                    .Where(property => property.Name != "Id");
+                                                    .Where(property => property.Name != "Id"&&property.Name!="Password");
             
             foreach (var property in properties)
             {
