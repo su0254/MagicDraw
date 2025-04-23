@@ -101,24 +101,24 @@
 //     if (canvasRef.current) {
 //       const canvas = document.createElement('canvas');
 //       const ctx = canvas.getContext('2d');
-  
+
 //       const img = new Image();
 //       img.crossOrigin = 'anonymous';
 //       img.src = backgroundImageUrl;
 //       img.onload = () => {
 //         canvas.width = img.width;
 //         canvas.height = img.height;
-  
+
 //         ctx?.drawImage(img, 0, 0);
-  
+
 //         const drawingData = canvasRef.current?.getDataURL("image/png");
 //         const drawingImg = new Image();
 //         drawingImg.src = drawingData;
 //         drawingImg.onload = () => {
 //           ctx?.drawImage(drawingImg, 0, 0);
-  
+
 //           const finalImage = canvas.toDataURL(`image/${format}`);
-  
+
 //           // יצירת קישור להורדה
 //           const link = document.createElement('a');
 //           link.href = finalImage;
@@ -294,14 +294,14 @@ import {
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../store/store"
 import { addPaintedPainting } from "../store/slices/paintingPaintedSlice"
-import type { UpLoadPaintingPaintedType } from "../types/UpLoadPaintingPaintedType"
 import SaveIcon from "@mui/icons-material/Save"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import DownloadIcon from "@mui/icons-material/Download"
 import DeleteIcon from "@mui/icons-material/Delete"
 import HomeIcon from "@mui/icons-material/Home"
 import PaletteIcon from "@mui/icons-material/Palette"
 import FormatPaintIcon from "@mui/icons-material/FormatPaint"
-
+import PrintIcon from "@mui/icons-material/Print"
 // Color palette
 const colorPalette = [
   "#FF9AA2", // Pink
@@ -394,7 +394,7 @@ const DrawingApp: React.FC = () => {
 
           const response = await fetch(finalImage)
           console.log("response", response);
-          
+
           const blob = await response.blob()
           const file = new File([blob], "my-image", { type: "image/png" })
 
@@ -445,6 +445,42 @@ const DrawingApp: React.FC = () => {
     }
   }
 
+  const printCanvas = () => {
+    if (canvasRef.current) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = backgroundImageUrl;
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx?.drawImage(img, 0, 0);
+
+        const drawingData = canvasRef.current?.getDataURL("image/png");
+        const drawingImg = new Image();
+        drawingImg.src = drawingData;
+        drawingImg.onload = () => {
+          ctx?.drawImage(drawingImg, 0, 0);
+
+          const finalImage = canvas.toDataURL("image/png");
+
+          // יצירת חלון חדש להדפסה
+          const printWindow = window.open("", "_blank");
+          if (printWindow) {
+            printWindow.document.write(`<img src="${finalImage}" style="width:100%; height:auto;" />`);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+          }
+        };
+      };
+    }
+  };
+
   const clearCanvas = () => {
     if (canvasRef.current) {
       canvasRef.current.clear()
@@ -491,6 +527,21 @@ const DrawingApp: React.FC = () => {
           אפליקציית צביעה
         </Typography>
 
+        {/* אייקון חץ לחזרה לעמוד הקודם */}
+        <ArrowForwardIcon
+          onClick={() => navigate(-1)} // חזרה לעמוד הקודם
+          sx={{
+            position: "absolute",
+            top: "70px", // מיקום למטה
+            right: "80px", // מיקום לצד שמאל
+            fontSize: "2rem",
+            color: "#555",
+            cursor: "pointer",
+            "&:hover": {
+              color: "#000",
+            },
+          }}
+        />
         <Grid container spacing={3}>
           <Grid item xs={12} md={3}>
             <Paper
@@ -612,6 +663,30 @@ const DrawingApp: React.FC = () => {
                   width: "100%",
                 }}
               />
+              <Tooltip title="ניקוי הכל">
+                <Button
+                  variant="contained"
+                  onClick={clearCanvas}
+                  startIcon={<DeleteIcon />}
+                  sx={{
+                    background: "linear-gradient(135deg, #FFDAC1 0%, #FFC8A2 100%)",
+                    color: "#fff",
+                    borderRadius: "12px",
+                    padding: "10px 20px",
+                    fontWeight: "bold",
+                    boxShadow: "0 4px 10px rgba(255, 218, 193, 0.3)",
+                    fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                    "&:hover": {
+                      background: "linear-gradient(135deg, #FFC8A2 0%, #FFDAC1 100%)",
+                      transform: "translateY(-3px)",
+                      boxShadow: "0 6px 15px rgba(255, 218, 193, 0.4)",
+                    },
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  ניקוי הכל
+                </Button>
+              </Tooltip>
             </Paper>
           </Grid>
 
@@ -628,6 +703,7 @@ const DrawingApp: React.FC = () => {
                 border: "3px solid #E2F0CB",
               }}
             >
+
               <CanvasDraw
                 ref={canvasRef}
                 brushColor={isEraser ? "#fff" : brushColor}
@@ -669,6 +745,32 @@ const DrawingApp: React.FC = () => {
                 </Button>
               </Tooltip>
 
+              {/* כפתור הדפסה */}
+              <Tooltip title="הדפסה">
+                <Button
+                  variant="contained"
+                  onClick={printCanvas}
+                  startIcon={<PrintIcon />}
+                  sx={{
+                    background: "linear-gradient(135deg, #FEE440 0%, #F15BB5 100%)",
+                    color: "#fff",
+                    borderRadius: "12px",
+                    padding: "10px 20px",
+                    fontWeight: "bold",
+                    boxShadow: "0 4px 10px rgba(255, 228, 64, 0.3)",
+                    fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                    "&:hover": {
+                      background: "linear-gradient(135deg, #F15BB5 0%, #FEE440 100%)",
+                      transform: "translateY(-3px)",
+                      boxShadow: "0 6px 15px rgba(255, 228, 64, 0.4)",
+                    },
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  הדפסה
+                </Button>
+              </Tooltip>
+
               <Tooltip title="הורדה">
                 <Button
                   variant="contained"
@@ -694,30 +796,7 @@ const DrawingApp: React.FC = () => {
                 </Button>
               </Tooltip>
 
-              <Tooltip title="ניקוי">
-                <Button
-                  variant="contained"
-                  onClick={clearCanvas}
-                  startIcon={<DeleteIcon />}
-                  sx={{
-                    background: "linear-gradient(135deg, #FFDAC1 0%, #FFC8A2 100%)",
-                    color: "#fff",
-                    borderRadius: "12px",
-                    padding: "10px 20px",
-                    fontWeight: "bold",
-                    boxShadow: "0 4px 10px rgba(255, 218, 193, 0.3)",
-                    fontFamily: '"Comic Sans MS", cursive, sans-serif',
-                    "&:hover": {
-                      background: "linear-gradient(135deg, #FFC8A2 0%, #FFDAC1 100%)",
-                      transform: "translateY(-3px)",
-                      boxShadow: "0 6px 15px rgba(255, 218, 193, 0.4)",
-                    },
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  ניקוי
-                </Button>
-              </Tooltip>
+
 
               <Tooltip title="חזרה לדף הבית">
                 <Button

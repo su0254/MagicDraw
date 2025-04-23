@@ -471,9 +471,9 @@ const HomePage: React.FC = () => {
             }}
           >
             <PaletteIcon sx={{ color: "#FFDAC1" }} />
-            <span style={{ color: "#FF9AA2" }}>גלריית</span>
-            <span style={{ color: "#FFDAC1" }}>ציורי</span>
-            <span style={{ color: "#E2F0CB" }}>ילדים</span>
+            <span style={{ color: "#FF9AA2" }}>MagicDraw -</span>
+            <span style={{ color: "#FFDAC1" }}>ציור</span>
+            <span style={{ color: "#E2F0CB" }}>קסם של</span>
           </Typography>
 
           <Box sx={{ display: "flex", gap: 1 }}>
