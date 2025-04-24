@@ -1,0 +1,17 @@
+<form [formGroup]="form" class="example-container" (submit)="login($event)">
+    <mat-form-field>
+        <mat-label>Enter your email</mat-label>
+        <input matInput type="email" formControlName="email" />
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Enter your password</mat-label>
+        <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" />
+        
+    </mat-form-field>
+    <section>
+        <div class="example-button-row">
+            <button mat-flat-button type="submit">Login</button>
+        </div>
+    </section>
+    <br/>
+</form>
