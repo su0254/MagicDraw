@@ -17,8 +17,9 @@ export class LoginService {
         password: user.password
       }).subscribe({
         next: (response: Partial<User>) => {
+          console.log("response", response);
           sessionStorage.setItem('token', response.token? response.token : ''); 
-          localStorage.setItem('userId', JSON.stringify(response.userId));
+          localStorage.setItem('userId', JSON.stringify(response.id));
           console.log("Login was succeed", response);
           this.router.navigate(['/dashboard']);
         },

@@ -1,0 +1,60 @@
+.user-container {
+    padding: 16px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+  }
+  
+  h2 {
+    margin-bottom: 16px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  button {
+    margin-bottom: 16px;
+  }
+  
+  .search-field {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 16px;
+  }
+  
+  .user-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  
+  .user-card mat-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .user-avatar {
+    background-color: #3f51b5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  
+  mat-card-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  mat-card-subtitle {
+    font-size: 14px;
+    color: gray;
+  }
+  
+  mat-card-content p {
+    margin: 4px 0;
+  }
+  
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+  }

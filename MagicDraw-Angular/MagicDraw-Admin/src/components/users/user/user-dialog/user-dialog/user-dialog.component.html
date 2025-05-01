@@ -1,0 +1,108 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>שם פרטי</mat-label>
+      <input matInput formControlName="firstName" placeholder="שם פרטי">
+      <mat-error *ngIf="userForm.get('name')?.hasError('required')">
+        שם פרטי חובה
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>שם משפחה</mat-label>
+      <input matInput formControlName="lastName" placeholder="שם משפחה">
+      <mat-error *ngIf="userForm.get('name')?.hasError('required')">
+        שם משפחה חובה
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>מייל</mat-label>
+      <input matInput formControlName="email" placeholder="מייל" type="email">
+      <mat-error *ngIf="userForm.get('email')?.hasError('required')">
+        מייל חובה
+      </mat-error>
+      <mat-error *ngIf="userForm.get('email')?.hasError('email')">
+        בבקשה הכנס כתובת מייל תקינה
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width" *ngIf="userForm.get('password')">
+      <mat-label>סיסמה</mat-label>
+      <input matInput formControlName="password" placeholder="סיסמה" type="password">
+      <mat-error *ngIf="userForm.get('password')?.hasError('required')">
+        סיסמה חןבה
+      </mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">
+        אורך הסיסמה חייב להיות לפחות 6 תווים
+      </mat-error>
+    </mat-form-field>
+
+    <!-- <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let role of roles" [value]="role">
+          {{ role }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="userForm.get('role')?.hasError('required')">
+        Role is required
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content> -->
+
+    <mat-dialog-actions align="end">
+      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">Save</button>
+    </mat-dialog-actions>
+  </mat-dialog-content>
+  </form>
+
+<!-- <h2 mat-dialog-title class="dialog-title">
+  {{ data.user.id ? 'עריכת משתמש' : 'הוספת משתמש חדש' }}
+</h2>
+
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="dialog-form">
+  <mat-form-field appearance="outline">
+    <mat-label>שם פרטי</mat-label>
+    <input matInput formControlName="firstName" placeholder="הכנס שם פרטי">
+    <mat-error *ngIf="userForm.get('firstName')?.hasError('required')">שדה זה הוא חובה</mat-error>
+    <mat-error *ngIf="userForm.get('firstName')?.hasError('minlength')">שם פרטי חייב להיות לפחות 2 תווים</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>שם משפחה</mat-label>
+    <input matInput formControlName="lastName" placeholder="הכנס שם משפחה">
+    <mat-error *ngIf="userForm.get('lastName')?.hasError('required')">שדה זה הוא חובה</mat-error>
+    <mat-error *ngIf="userForm.get('lastName')?.hasError('minlength')">שם משפחה חייב להיות לפחות 2 תווים</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>אימייל</mat-label>
+    <input matInput formControlName="email" placeholder="הכנס כתובת אימייל">
+    <mat-error *ngIf="userForm.get('email')?.hasError('required')">שדה זה הוא חובה</mat-error>
+    <mat-error *ngIf="userForm.get('email')?.hasError('email')">כתובת אימייל אינה תקינה</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" *ngIf="!data.user.id">
+    <mat-label>סיסמה</mat-label>
+    <input matInput type="password" formControlName="password" placeholder="הכנס סיסמה">
+    <mat-error *ngIf="userForm.get('password')?.hasError('required')">שדה זה הוא חובה</mat-error>
+    <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">סיסמה חייבת להיות לפחות 6 תווים</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>תפקיד</mat-label>
+    <mat-select formControlName="role">
+      <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="dialog-actions">
+    <button mat-button type="button" (click)="onCancel()">ביטול</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+      {{ data.user.id ? 'עדכן' : 'הוסף' }}
+    </button>
+  </div>
+</form> -->
