@@ -52,7 +52,7 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserDto>> Post([FromBody] UserPostModel user)
         {
             var userDto = _mapper.Map<UserDto>(user);
@@ -80,7 +80,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<bool> Delete(Guid id)
         {
             return await _userService.DeleteByIdAsync(id);

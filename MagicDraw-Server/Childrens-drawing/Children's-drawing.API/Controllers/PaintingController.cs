@@ -36,7 +36,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "EditorOrAdmin")]
+        //[Authorize(Roles = "EditorOrAdmin")]
         public async Task<ActionResult<PaintingDto>> Get(Guid id)
         {
             var p = await _paintingService.GetByIdAsync(id);
@@ -60,7 +60,7 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        [Authorize(Roles = "EditorOrAdmin")]
+        //[Authorize(Roles = "EditorOrAdmin")]
         public async Task<ActionResult<PaintingDto>> Put(Guid id, [FromBody] PaintingPostModel painting)
         {
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -75,7 +75,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<bool> Delete(Guid id)
         {
             return await _paintingService.DeleteByIdAsync(id);

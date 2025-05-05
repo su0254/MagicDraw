@@ -74,6 +74,7 @@ namespace Children_s_drawing.Service.Services
         public async Task<UserDto> AddAsync(UserDto userDto)
         {
             var u = _mapper.Map<User>(userDto);
+            u.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
             u = await _repositoryManager._userRepository.AddAsync(u);
             if (u != null)
                 await _repositoryManager.SaveAsync();
