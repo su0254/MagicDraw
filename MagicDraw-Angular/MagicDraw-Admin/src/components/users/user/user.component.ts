@@ -8,42 +8,25 @@ import { UserDialogComponent } from "./user-dialog/user-dialog/user-dialog.compo
 import { ConfirmDialogComponent } from "../../../shareds/confirm-dialog/confirm-dialog/confirm-dialog.component"
 import { MatIcon } from "@angular/material/icon"
 import { MatCard } from "@angular/material/card"
-import { MatCardContent } from "@angular/material/card"
-import { MatFormField } from "@angular/material/form-field"
-import { MatLabel } from "@angular/material/form-field"
 import { MatCardTitle}from "@angular/material/card"
 import { MatCardActions} from "@angular/material/card"
 import { MatCardSubtitle, MatCardHeader } from "@angular/material/card"
 import { UserService } from "../../../services/userManagment/user.service"
 import { User } from "../../../Models/User"
-
-
-
-// export interface User {
-//   id: string
-//   name: string
-//   email: string
-//   role: string
-//   status: string
-//   createdAt: string
-//   lastLogin: string
-// }
+import { Observable } from "rxjs"
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-user',
-  imports: [MatIcon, MatCard, MatCardContent, MatPaginator, MatCardTitle,
-     MatCardActions, MatCardSubtitle, MatCardHeader],
+  imports: [MatIcon, MatCard, MatPaginator, MatCardTitle,
+     MatCardActions, MatCardSubtitle, MatCardHeader, AsyncPipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
 export class UserComponent {
-  displayedColumns: string[] = ["id", "name", "email", "role", "status", "createdAt", "lastLogin", "actions"]
-  dataSource = new MatTableDataSource<User>()
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator
-  @ViewChild(MatSort) sort!: MatSort
-  users: User[] = []
 
+  users$: Observable<User[]> | undefined
 
   constructor(
     private dialog: MatDialog,
@@ -52,18 +35,13 @@ export class UserComponent {
   ) {}
 
   ngOnInit() {
-    this.userService.getAllUsers().subscribe((users: User[]) => {
-      this.users = users
+    this.userService.getAllUsers().subscribe(() => {
+      this.users$ = this.userService.users$
     })
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value
-    this.dataSource.filter = filterValue.trim().toLowerCase()
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage()
-    }
   }
 
   addUser() {
@@ -75,13 +53,11 @@ export class UserComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         // In a real app, you would call a service to add the user
-        const newUser: User = {
-          id: (this.dataSource.data.length + 1).toString(),
+        const newUser = {
           firstName: result.firstName,
           lastName: result.lastName,
           email: result.email,
           password: result.password,
-          token: result.token,
         }
 
         this.userService.addUser(newUser)
@@ -116,7 +92,9 @@ export class UserComponent {
     })
 
     dialogRef.afterClosed().subscribe((result) => {
+      
       if (result) {
+        console.log("result", result);
         this.userService.deleteUser(user.id)
       }
     })

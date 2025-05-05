@@ -1,0 +1,52 @@
+<h2 mat-dialog-title class="dialog-title">
+    {{ data.drawing.id ? 'עריכת ציור' : 'הוספת ציור חדש' }}
+</h2>
+
+<form [formGroup]="drawingForm" (ngSubmit)="onSubmit()" class="drawing-form">
+    <!-- <mat-form-field appearance="outline"> -->
+    <div>
+        <mat-label>כותרת</mat-label>
+        <input matInput formControlName="title" placeholder="הכנס כותרת">
+        @if(drawingForm.get('title')?.hasError('required')) {
+        <mat-error>שדה זה הוא חובה</mat-error>
+        }
+        @if(drawingForm.get('title')?.hasError('minlength')) {
+        <mat-error>כותרת חייבת להיות באורך מינימלי של 3 תווים</mat-error>
+        }
+        <!-- <mat-error *ngIf="drawingForm.get('title')?.hasError('required')">שדה זה הוא חובה</mat-error> -->
+    </div>
+    <!-- </mat-form-field> -->
+
+    <!-- <mat-form-field appearance="outline"> -->
+    <div>
+        <mat-label>קטגוריה</mat-label>
+        <mat-select formControlName="category">
+            @for (category of categories; track $index) {
+            <mat-option [value]="category">{{ category }}</mat-option>
+            }
+        </mat-select>
+        @if(drawingForm.get('category')?.hasError('required')) {
+        <mat-error>שדה זה הוא חובה</mat-error>
+        }
+        <!-- <mat-error *ngIf="drawingForm.get('category')?.hasError('required')">שדה זה הוא חובה</mat-error> -->
+    </div>
+    <!-- </mat-form-field> -->
+
+    <!-- <mat-form-field appearance="outline" *ngIf="!data.drawing.id"> -->
+    <div class="file-upload-container">
+        <mat-label>קובץ</mat-label>
+        <input matInput type="file" formControlName="file">
+        @if(drawingForm.get('file')?.hasError('required')) {
+        <mat-error>שדה זה הוא חובה</mat-error>
+        }
+        <!-- <mat-error *ngIf="drawingForm.get('file')?.hasError('required')">שדה זה הוא חובה</mat-error> -->
+    </div>
+    <!-- </mat-form-field> -->
+
+    <div class="dialog-actions">
+        <button mat-button type="button" (click)="onCancel()">ביטול</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="drawingForm.invalid">
+            {{ data.drawing.id ? 'עדכן' : 'הוסף' }}
+        </button>
+    </div>
+</form>

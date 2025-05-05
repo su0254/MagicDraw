@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, catchError, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar'; // ייבוא MatSnackBar
+import { LoginService } from '../LoginService/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,12 @@ export class UserService {
   private usersSubject = new BehaviorSubject<any[]>([]);
   users$ = this.usersSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private auth: LoginService) { }
 
   getAllUsers(): Observable<any> {
     return this.http.get<any[]>("http://localhost:5058/api/User").pipe(
       tap((users: any[]) => {
+
         this.usersSubject.next(users);
         this.showMessage("משתמשים נטענו בהצלחה", "success");
       }),
@@ -37,12 +39,14 @@ export class UserService {
   }
 
   addUser(user: any): Observable<any> {
+    console.log("user in service", user);
     return this.http.post("http://localhost:5058/api/User", user).pipe(
       tap(() => {
+        console.log("user was added", user);
         this.showMessage("משתמש נוסף בהצלחה", "success");
         this.refreshUsers();
       }),
-      catchError((error) => {
+      catchError(() => {
         this.showMessage("שגיאה בהוספת משתמש", "error");
         return of(null);
       })
@@ -62,18 +66,25 @@ export class UserService {
     );
   }
 
-  deleteUser(userId: string): Observable<any> {
-    console.log("delete in servuce", userId);
+
+  deleteUser(userId:string){
+    // const token = sessionStorage.getItem('token');
+    // if(!token){
+    //   return;
+    // }
+    // const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    console.log("delete in service", userId);
     
-    return this.http.delete(`http://localhost:5058/api/User/${userId}`).pipe(
-      tap(() => {
+    this.http.delete(`http://localhost:5058/api/User/${userId}`).subscribe({
+      next: () => {
         console.log("User was deleted");
-      }),
-      catchError((error) => {
+        this.showMessage("משתמש נמחק בהצלחה", "success");
+        this.refreshUsers(); // רענן את רשימת המשתמשים לאחר מחיקה
+      },
+      error: (error) => {
         console.error('Error occurred:', error); // טיפול בשגיאות
-        return of(null);
-      })
-    );
+      }
+    })
   }
 
   private refreshUsers(): void {
