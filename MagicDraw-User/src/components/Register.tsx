@@ -252,7 +252,7 @@ const Register: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const { loading, error } = useSelector((state: RootState) => state.auth as { loading: boolean; error: string | null })
+  const { error } = useSelector((state: RootState) => state.auth as { loading: boolean; error: string | null })
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [failureMessage, setFailureMessage] = useState<string | null>(null)

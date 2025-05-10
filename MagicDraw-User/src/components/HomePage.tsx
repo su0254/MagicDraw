@@ -345,8 +345,8 @@ import {
   Paper,
   IconButton,
   Tooltip,
-  useMediaQuery,
-  useTheme,
+  // useMediaQuery,
+  // useTheme,
 } from "@mui/material"
 
 // Icons
@@ -363,8 +363,8 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate()
   const { isLoggedIn, setIsLoggedIn } = useAuth()
   const dispatch = useDispatch<AppDispatch>()
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  // const theme = useTheme()
+  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
   const [openUploadDialog, setOpenUploadDialog] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)

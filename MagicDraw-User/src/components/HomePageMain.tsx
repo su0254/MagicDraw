@@ -292,8 +292,8 @@ const HomePageMain: React.FC = () => {
     navigate("/show-painting", { state: { selectedImage: imagePath } })
   }
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setCurrentPage(value)
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page)
     // Scroll to top of gallery
     window.scrollTo({
       top: document.getElementById("gallery-section")?.offsetTop || 0,

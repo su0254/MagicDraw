@@ -8,7 +8,7 @@ const baseUrl = 'http://localhost:5058/api/';
 export const fetchCategories = createAsyncThunk('categories/fetchAll', async (_, thunkAPI) => {
     try {
         console.log('Fetching categories...');
-        const token = sessionStorage.getItem('authToken'); // Retrieve the token from session storage
+        // const token = sessionStorage.getItem('authToken'); // Retrieve the token from session storage
         const response = await axios.get(`${baseUrl}Category`,
             // {
             //     headers: {
