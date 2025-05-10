@@ -38,43 +38,33 @@ export class UserService {
     );
   }
 
-  addUser(user: any): Observable<any> {
+  addUser(user: any) {
     console.log("user in service", user);
-    return this.http.post("http://localhost:5058/api/User", user).pipe(
-      tap(() => {
-        console.log("user was added", user);
-        this.showMessage("משתמש נוסף בהצלחה", "success");
-        this.refreshUsers();
-      }),
-      catchError(() => {
-        this.showMessage("שגיאה בהוספת משתמש", "error");
-        return of(null);
-      })
-    );
-  }
 
-  updateUser(userId: string, user: any): Observable<any> {
-    return this.http.put(`http://localhost:5058/api/User/${userId}`, user).pipe(
-      tap(() => {
-        this.showMessage("משתמש עודכן בהצלחה", "success");
-        this.refreshUsers();
-      }),
-      catchError((error) => {
-        this.showMessage("שגיאה בעדכון משתמש", "error");
-        return of(null);
-      })
-    );
+     this.http.post("http://localhost:5058/api/User", user).subscribe(
+      {
+        next: (() => {
+          console.log("user was added", user);
+          this.showMessage("משתמש נוסף בהצלחה", "success");
+          this.refreshUsers();
+          
+        }),
+        error: (() => {
+          this.showMessage("שגיאה בהוספת משתמש", "error");
+          return of(null);
+        })
+      });
   }
 
 
-  deleteUser(userId:string){
+  deleteUser(userId: string) {
     // const token = sessionStorage.getItem('token');
     // if(!token){
     //   return;
     // }
     // const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     console.log("delete in service", userId);
-    
+
     this.http.delete(`http://localhost:5058/api/User/${userId}`).subscribe({
       next: () => {
         console.log("User was deleted");

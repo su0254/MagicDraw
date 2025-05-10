@@ -31,10 +31,23 @@ export class DrawingService {
 
   // Add a new drawing
   addDrawing(drawing: Drawing): Observable<Drawing> {
-    return this.http.post<Drawing>(`${this.apiUrl}`, drawing).pipe(
+    console.log("Drawing to add:", drawing);
+    
+    const formData = new FormData();
+    formData.append('FileName', drawing.fileName);
+    formData.append('CategoryName', drawing.categoryName);
+    formData.append('ImageFile', drawing.imageFile);
+    formData.append('UserId', localStorage.getItem('userId') || '');
+    console.log("FormData:", formData);
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+  });
+    
+    return this.http.post<Drawing>(`${this.apiUrl}`, formData).pipe(
       tap((newDrawing) => {
         const currentDrawings = this.drawingsSubject.value;
         this.drawingsSubject.next([...currentDrawings, newDrawing]);
+        
       }),
       catchError((error) => {
         console.error("Error adding drawing:", error);

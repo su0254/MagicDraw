@@ -11,7 +11,7 @@ import { LoginService } from '../../services/LoginService/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, 
+  imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule,
     ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -36,11 +36,16 @@ export class LoginComponent {
     e.preventDefault();
     if (this.form.valid) {
       this.userService.login({
-        email: this.form.get('email')?.value,
-        password: this.form.get('password')?.value
+        user: {
+          email: this.form.get('email')?.value,
+          password: this.form.get('password')?.value,
+          id:'',
+          firstName: '',
+          lastName: ''
+        }
       })
       console.log("before navigate");
-      
+
     }
     else {
       let errorMessage = '';

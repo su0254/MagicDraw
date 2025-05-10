@@ -1,0 +1,24 @@
+<div class="category-container">
+    <h2>ניהול קטגוריות</h2>
+
+    <div>
+        <input #newCategoryInput placeholder="הוסף קטגוריה חדשה" />
+        <button  (click)="addCategory(newCategoryInput)">הוסף</button>
+    </div>
+
+    <ul>
+        @for (category of categories; track $index) {
+        <li>
+            {{ category.categoryName }}
+            <button (click)="deleteCategory(category.id)">מחק</button>
+            <!-- <input #changeCategory [value]="category.categoryName" (blur)="updateCategory(category.id, category.categoryName)" /> -->
+            <!-- <div>
+                <input [value]="category.categoryName" [disabled]="!isEditing" placeholder="הכנס שם קטגוריה" />
+                <button (click)="toggleEdit()">
+                  {{ isEditing ? 'שמור' : 'ערוך' }}
+                </button>
+              </div> -->
+        </li>
+        }
+    </ul>
+</div>

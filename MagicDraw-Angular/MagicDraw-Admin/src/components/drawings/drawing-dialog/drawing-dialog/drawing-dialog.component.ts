@@ -15,6 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog'; // ייבוא MatDia
   styleUrls: ['./drawing-dialog.component.css']
 })
 export class DrawingDialogComponent {
+
   drawingForm!: FormGroup
   categories: string[] | undefined;
   statuses = ["Approved", "Pending", "Rejected"];
@@ -29,13 +30,13 @@ export class DrawingDialogComponent {
   ngOnInit() {
     this.categories= ["Nature", "Animals", "People", "Abstract", "Other"]
     this.drawingForm = this.fb.group({
-      title: [this.data.drawing.title || "", [Validators.required]],
-      category: [this.data.drawing.category || "", [Validators.required]],
+      fileName: [this.data.drawing.title || "", [Validators.required]],
+      categoryName: [this.data.drawing.category || "", [Validators.required]],
     })
 
     // Add file upload control for new drawings
     if (!this.data.drawing.id) {
-      this.drawingForm.addControl("file", this.fb.control("", [Validators.required]))
+      this.drawingForm.addControl("imageFile", this.fb.control("", [Validators.required]))
     }
   }
 
@@ -45,8 +46,20 @@ export class DrawingDialogComponent {
 
   onSubmit(): void {
     if (this.drawingForm.valid) {
+      console.log("drawing-dialog", this.drawingForm.value);
+      
       this.drawingService.addDrawing(this.drawingForm.value).subscribe()
       this.dialogRef.close(this.drawingForm.value)
+    }
+  }
+
+  onFileSelected($event: Event) {
+    const input = $event.target as HTMLInputElement
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0]
+      this.drawingForm.patchValue({
+        imageFile: file
+      })
     }
   }
 }

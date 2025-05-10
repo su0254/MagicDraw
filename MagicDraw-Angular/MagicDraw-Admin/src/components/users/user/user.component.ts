@@ -38,6 +38,8 @@ export class UserComponent {
     this.userService.getAllUsers().subscribe(() => {
       this.users$ = this.userService.users$
     })
+    console.log("users$", this.users$);
+    
   }
 
   applyFilter(event: Event) {
@@ -61,19 +63,6 @@ export class UserComponent {
         }
 
         this.userService.addUser(newUser)
-      }
-    })
-  }
-
-  editUser(user: User) {
-    const dialogRef = this.dialog.open(UserDialogComponent, {
-      width: "500px",
-      data: { title: "Edit User", user: { ...user } },
-    })
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.userService.updateUser(user.id, result)
       }
     })
   }

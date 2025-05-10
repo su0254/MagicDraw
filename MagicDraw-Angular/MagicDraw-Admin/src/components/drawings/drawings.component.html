@@ -10,10 +10,9 @@
         <mat-card>
           <mat-card-header>
             <div mat-card-avatar class="drawing-avatar">
-              <img [src]="drawing.url" alt="{{ drawing.fileName }}" />
+              <img [src]="drawing.imageFile" alt="{{ drawing.fileName }}" />
             </div>
             <mat-card-title>{{ drawing.fileName }}</mat-card-title>
-            <mat-card-subtitle>{{ drawing.descraption }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <p><strong>קטגוריה:</strong> {{ drawing.categoryName }}</p>

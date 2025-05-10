@@ -6,11 +6,11 @@
     <!-- <mat-form-field appearance="outline"> -->
     <div>
         <mat-label>כותרת</mat-label>
-        <input matInput formControlName="title" placeholder="הכנס כותרת">
-        @if(drawingForm.get('title')?.hasError('required')) {
+        <input matInput formControlName="fileName" placeholder="הכנס כותרת">
+        @if(drawingForm.get('fileName')?.hasError('required')) {
         <mat-error>שדה זה הוא חובה</mat-error>
         }
-        @if(drawingForm.get('title')?.hasError('minlength')) {
+        @if(drawingForm.get('fileName')?.hasError('minlength')) {
         <mat-error>כותרת חייבת להיות באורך מינימלי של 3 תווים</mat-error>
         }
         <!-- <mat-error *ngIf="drawingForm.get('title')?.hasError('required')">שדה זה הוא חובה</mat-error> -->
@@ -20,12 +20,12 @@
     <!-- <mat-form-field appearance="outline"> -->
     <div>
         <mat-label>קטגוריה</mat-label>
-        <mat-select formControlName="category">
+        <mat-select formControlName="categoryName" placeholder="בחר קטגוריה">
             @for (category of categories; track $index) {
             <mat-option [value]="category">{{ category }}</mat-option>
             }
         </mat-select>
-        @if(drawingForm.get('category')?.hasError('required')) {
+        @if(drawingForm.get('categoryName')?.hasError('required')) {
         <mat-error>שדה זה הוא חובה</mat-error>
         }
         <!-- <mat-error *ngIf="drawingForm.get('category')?.hasError('required')">שדה זה הוא חובה</mat-error> -->
@@ -35,8 +35,8 @@
     <!-- <mat-form-field appearance="outline" *ngIf="!data.drawing.id"> -->
     <div class="file-upload-container">
         <mat-label>קובץ</mat-label>
-        <input matInput type="file" formControlName="file">
-        @if(drawingForm.get('file')?.hasError('required')) {
+        <input matInput type="file" (change)="onFileSelected($event)" placeholder="בחר קובץ">
+        @if(drawingForm.get('imageFile')?.hasError('required')) {
         <mat-error>שדה זה הוא חובה</mat-error>
         }
         <!-- <mat-error *ngIf="drawingForm.get('file')?.hasError('required')">שדה זה הוא חובה</mat-error> -->

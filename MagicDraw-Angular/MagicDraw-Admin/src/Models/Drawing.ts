@@ -2,8 +2,7 @@ export type Drawing = {
 id: string,
 fileName:string,       // מזהה ייחודי
 categoryName: string; // קטגוריה
-url: string; // כתובת התמונה
+// url: string; // כתובת התמונה
 userId: string; // מזהה המשתמש שצייר את התמונה  
-image: File;
-descraption: string; // תיאור התמונה
+imageFile: File;
 }
