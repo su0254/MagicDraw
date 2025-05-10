@@ -8,6 +8,7 @@ using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
 using Children_s_drawing.Core.InterfacesServices;
 using Childrens_drawing.Core.Dtos;
+using Childrens_drawing.Core.Entities;
 
 namespace Children_s_drawing.Service.Services
 {
@@ -74,7 +75,21 @@ namespace Children_s_drawing.Service.Services
         public async Task<UserDto> AddAsync(UserDto userDto)
         {
             var u = _mapper.Map<User>(userDto);
-            u.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            var userByEmail = await _repositoryManager._userRepository.GetByEmailAsync(u.Email);
+            if (userByEmail != null)
+                return null;
+
+            var user = new User
+            {
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(u.Password),
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                Roles = new List<Role> { new Role { RoleName = "Editor" } }
+            };
+
             u = await _repositoryManager._userRepository.AddAsync(u);
             if (u != null)
                 await _repositoryManager.SaveAsync();

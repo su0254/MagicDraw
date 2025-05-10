@@ -65,6 +65,36 @@ namespace Children_s_drawing.Service.Services
 
         public async Task<bool> DeleteByIdAsync(Guid id)
         {
+            var image = await _repositoryManager._paintingRepository.GetByIdAsync(id);
+            var imageUrl = image.Url;
+            string publicId = imageUrl.Substring(imageUrl.LastIndexOf('/') + 1).Split('.')[0];
+            DotEnv.Load();
+            Console.WriteLine(Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME"));
+            // קבל את הערכים
+            var cloudName = Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME");
+            var apiKey = Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY");
+            var apiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET");
+            Console.WriteLine($"Cloud Name: {cloudName}");
+            Console.WriteLine($"API Key: {apiKey}");
+            Console.WriteLine($"API Secret: {apiSecret}");
+
+
+            // הגדרות עם הנתונים שלך (החלף עם הערכים האמיתיים שלך)
+            var account = new Account(
+                cloudName,      // שנה לערך מה-Cloudinary Dashboard
+                apiKey,         // שנה לערך מה-Cloudinary Dashboard
+                apiSecret       // שנה לערך מה-Cloudinary Dashboard
+            );
+
+            var cloudinary = new Cloudinary(account);
+            cloudinary.Api.Secure = true; // 
+
+            // מחיקת התמונה
+            var deleteParams = new DeletionParams(publicId);
+            var result = cloudinary.Destroy(deleteParams);
+
+            Console.WriteLine("תמונה נמחקה: " + result.Result);
+
             bool succeed = await _repositoryManager._paintingRepository.DeleteByIdAsync(id);
             if (succeed)
                 await _repositoryManager.SaveAsync();
@@ -96,7 +126,7 @@ namespace Children_s_drawing.Service.Services
 
         public async Task<IEnumerable<Painting>> GetPaintingsByCategoryAsync(string categoryName)
         {
-            if(string.IsNullOrEmpty(categoryName))
+            if (string.IsNullOrEmpty(categoryName))
             {
                 return await Task.FromResult<IEnumerable<Painting>>(new List<Painting>());
             }
@@ -108,7 +138,7 @@ namespace Children_s_drawing.Service.Services
             }
 
             var paintings = await _repositoryManager._paintingRepository.GetPaintingsByCategoryAsync(categoryName);
-            if(paintings !=null)
+            if (paintings != null)
                 await _repositoryManager.SaveAsync();
             return paintings;
         }

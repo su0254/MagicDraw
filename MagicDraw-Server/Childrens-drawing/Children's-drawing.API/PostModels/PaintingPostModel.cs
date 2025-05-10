@@ -10,8 +10,6 @@ namespace Childrens_drawing.Core.PostModels
     {
         public string FileName { get; set; }
         public string CategoryName { get; set; }
-        //public string Url { get; set; }
-        //public int Age { get; set; }
         public Guid UserId { get; set; }
         public IFormFile  ImageFile { get; set; }         
     }

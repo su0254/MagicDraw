@@ -74,7 +74,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<bool> Delete(Guid id)
         {
             return await _categoryService.DeleteByIdAsync(id);

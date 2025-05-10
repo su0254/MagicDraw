@@ -35,8 +35,8 @@ namespace Children_s_drawing.Service.Services
             var category = await _repositoryManager._categoryRepository.GetByIdAsync(id);
             if (category != null)
             {
-                // נניח שיש לך List של ציורים במשתמש
-                var paintings = category.Paintings; // נניח ש-Paintings הוא List של ציורים
+               
+                var paintings = category.Paintings;
 
                 if (paintings != null && paintings.Any())
                 {
@@ -46,14 +46,13 @@ namespace Children_s_drawing.Service.Services
                     }
                 }
 
-                // עכשיו מוחקים את המשתמש
-                bool succeed = await _repositoryManager._userRepository.DeleteByIdAsync(id);
+                bool succeed = await _repositoryManager._categoryRepository.DeleteByIdAsync(id);
                 if (succeed)
                     await _repositoryManager.SaveAsync();
 
                 return succeed;
             }
-            return false; // אם המשתמש לא נמצא
+            return false; 
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
