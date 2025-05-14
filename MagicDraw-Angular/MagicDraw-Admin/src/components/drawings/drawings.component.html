@@ -10,7 +10,7 @@
         <mat-card>
           <mat-card-header>
             <div mat-card-avatar class="drawing-avatar">
-              <img [src]="drawing.imageFile" alt="{{ drawing.fileName }}" />
+              <img [src]="drawing.url" alt="{{ drawing.fileName }}" />
             </div>
             <mat-card-title>{{ drawing.fileName }}</mat-card-title>
           </mat-card-header>
@@ -18,10 +18,10 @@
             <p><strong>קטגוריה:</strong> {{ drawing.categoryName }}</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-button color="primary" (click)="editDrawing(drawing)">
+            <!-- <button mat-button color="primary" (click)="editDrawing(drawing)">
               <mat-icon>edit</mat-icon>
               ערוך
-            </button>
+            </button> -->
             <button mat-button color="warn" (click)="deleteDrawing(drawing)">
               <mat-icon>delete</mat-icon>
               מחק

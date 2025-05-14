@@ -21,8 +21,8 @@
     <div>
         <mat-label>קטגוריה</mat-label>
         <mat-select formControlName="categoryName" placeholder="בחר קטגוריה">
-            @for (category of categories; track $index) {
-            <mat-option [value]="category">{{ category }}</mat-option>
+            @for (category of (categories$|async); track $index) {
+            <mat-option [value]="category">{{ category.categoryName }}</mat-option>
             }
         </mat-select>
         @if(drawingForm.get('categoryName')?.hasError('required')) {
