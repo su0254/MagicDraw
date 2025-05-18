@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -21,6 +19,7 @@ import HomeIcon from "@mui/icons-material/Home"
 import PaletteIcon from "@mui/icons-material/Palette"
 import FormatPaintIcon from "@mui/icons-material/FormatPaint"
 import PrintIcon from "@mui/icons-material/Print"
+import axios from "axios"
 // Color palette
 const colorPalette = [
   "#FF9AA2", // Pink
@@ -44,6 +43,7 @@ const DrawingApp: React.FC = () => {
   const [isEraser, setIsEraser] = useState<boolean>(false)
   const [canvasSize, setCanvasSize] = useState<{ width: number; height: number }>({ width: 800, height: 400 })
   const canvasRef = useRef<CanvasDraw>(null)
+  const [instructions, setInstructions] = useState<string>("");
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -210,6 +210,17 @@ const DrawingApp: React.FC = () => {
     navigate("/")
   }
 
+  const fetchColorInstructions = async () => {
+    console.log("backgroundImageUrl", backgroundImageUrl);
+    
+    if (backgroundImageUrl) { // משתמש ב-URL של התמונה
+      const response = await axios.post('http://127.0.0.1:5000/color_instructions', {
+        image_path: backgroundImageUrl // שולח את ה-URL של התמונה
+      });
+      setInstructions(response.data); // עדכון ההוראות מה-API
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -231,6 +242,45 @@ const DrawingApp: React.FC = () => {
           border: "3px solid #E2F0CB",
         }}
       >
+      <Grid container spacing={3}>
+          <Grid item xs={12} md={3}>
+            <Tooltip title="קבלת הוראות לצביעה">
+              <Button
+                variant="contained"
+                onClick={fetchColorInstructions}
+                sx={{
+                  background: "linear-gradient(135deg, #E2F0CB 0%, #B5EAD7 100%)",
+                  color: "#fff",
+                  borderRadius: "12px",
+                  padding: "10px 20px",
+                  fontWeight: "bold",
+                  boxShadow: "0 4px 10px rgba(226, 240, 203, 0.3)",
+                  fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #B5EAD7 0%, #E2F0CB 100%)",
+                    transform: "translateY(-3px)",
+                    boxShadow: "0 6px 15px rgba(226, 240, 203, 0.4)",
+                  },
+                  transition: "all 0.3s ease",
+                }}
+              >
+                קבלת הוראות לצביעה
+              </Button>
+            </Tooltip>
+          </Grid>
+
+          <Grid item xs={12} md={9}>
+            {instructions && (
+              <Paper sx={{ padding: 2, marginTop: 2 }}>
+                <Typography variant="h6" gutterBottom>
+                  הוראות לצביעה:
+                </Typography>
+                <Typography>{instructions}</Typography>
+              </Paper>
+            )}
+          </Grid>
+        </Grid>
+
         <Typography
           variant="h4"
           align="center"
