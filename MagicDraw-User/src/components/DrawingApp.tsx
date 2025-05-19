@@ -181,6 +181,8 @@ const DrawingApp: React.FC = () => {
         const drawingData = canvasRef.current?.getDataURL("image/png");
         const drawingImg = new Image();
         drawingImg.src = drawingData;
+        console.log("drawingImg", drawingImg.src);
+        
         drawingImg.onload = () => {
           ctx?.drawImage(drawingImg, 0, 0);
 

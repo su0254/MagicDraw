@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Add New Category</h2>
+<mat-dialog-content>
+  <p>Create a new category for organizing drawings</p>
+  <form [formGroup]="categoryForm" class="category-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter category name" required>
+      <mat-error *ngIf="categoryForm.get('name').hasError('required')">
+        Category name is required
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" placeholder="Enter category description" rows="3"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="categoryForm.invalid" (click)="onSubmit()">
+    Add Category
+  </button>
+</mat-dialog-actions>

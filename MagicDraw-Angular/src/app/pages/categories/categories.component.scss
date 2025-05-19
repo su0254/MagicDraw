@@ -1,0 +1,172 @@
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.card-header-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 16px;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-field {
+  width: 100%;
+  
+  @media (min-width: 768px) {
+    width: 300px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.category-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+}
+
+.category-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 8px;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.category-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.category-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-description {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 16px;
+}
+
+.usage-container {
+  margin-top: 16px;
+}
+
+.usage-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.bg-blue {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #2196f3;
+  }
+}
+
+.bg-purple {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #9c27b0;
+  }
+}
+
+.bg-emerald {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #4caf50;
+  }
+}
+
+.bg-cyan {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #00bcd4;
+  }
+}
+
+.bg-amber {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #ffc107;
+  }
+}
+
+.bg-gray {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #9e9e9e;
+  }
+}
+
+.delete-action {
+  color: #f44336;
+}
+
+:host-context(.dark-theme) {
+  .page-subtitle, .category-description {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}

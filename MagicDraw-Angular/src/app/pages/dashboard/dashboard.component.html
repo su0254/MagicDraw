@@ -1,0 +1,179 @@
+<div class="dashboard-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">Manage children's drawings with ease</h1>
+          <p class="hero-subtitle">
+            Your complete admin dashboard for organizing, categorizing, and analyzing children's artwork
+          </p>
+          <div class="hero-actions">
+            <button mat-raised-button color="primary" routerLink="/drawings">
+              <mat-icon>image</mat-icon>
+              Manage Drawings
+            </button>
+            <button mat-stroked-button routerLink="/statistics">
+              <mat-icon>bar_chart</mat-icon>
+              View Statistics
+            </button>
+          </div>
+        </div>
+        
+        <div class="stats-grid">
+          <app-stat-card 
+            title="Users" 
+            [value]="dashboardStats?.totalUsers || 0" 
+            description="Active users" 
+            icon="people"
+            iconColor="text-blue">
+          </app-stat-card>
+          
+          <app-stat-card 
+            title="Drawings" 
+            [value]="dashboardStats?.totalDrawings || 0" 
+            description="Total drawings" 
+            icon="image"
+            iconColor="text-purple">
+          </app-stat-card>
+          
+          <app-stat-card 
+            title="Categories" 
+            [value]="dashboardStats?.activeCategories || 0" 
+            description="Drawing categories" 
+            icon="folder"
+            iconColor="text-primary">
+          </app-stat-card>
+          
+          <app-stat-card 
+            title="Analytics" 
+            [value]="dashboardStats?.averageEngagement ? dashboardStats.averageEngagement + '%' : '0%'" 
+            description="Engagement rate" 
+            icon="bar_chart"
+            iconColor="text-amber">
+          </app-stat-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Access Section -->
+  <section class="container section">
+    <h2 class="section-title">Quick Access</h2>
+    <div class="quick-access-grid">
+      <mat-card routerLink="/users" class="quick-access-card">
+        <mat-card-header>
+          <div class="header-content">
+            <mat-card-title>User Management</mat-card-title>
+            <mat-icon class="text-blue">people</mat-icon>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Manage user accounts and permissions</p>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card routerLink="/statistics" class="quick-access-card">
+        <mat-card-header>
+          <div class="header-content">
+            <mat-card-title>Usage Statistics</mat-card-title>
+            <mat-icon class="text-amber">bar_chart</mat-icon>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <p>View drawing usage analytics by category</p>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card routerLink="/drawings" class="quick-access-card">
+        <mat-card-header>
+          <div class="header-content">
+            <mat-card-title>Drawing Library</mat-card-title>
+            <mat-icon class="text-purple">image</mat-icon>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Browse and manage all drawings</p>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card routerLink="/categories" class="quick-access-card">
+        <mat-card-header>
+          <div class="header-content">
+            <mat-card-title>Categories</mat-card-title>
+            <mat-icon class="text-primary">folder</mat-icon>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Organize drawings into categories</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Admin Tools Section -->
+  <section class="container section">
+    <h2 class="section-title">Admin Tools</h2>
+    <div class="admin-tools-grid">
+      <mat-card class="admin-tool-card">
+        <mat-card-header>
+          <div class="tool-icon text-blue">
+            <mat-icon>search</mat-icon>
+          </div>
+          <mat-card-title>Advanced Search</mat-card-title>
+          <mat-card-subtitle>Find drawings by user, category, or date</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Powerful search tools to quickly locate specific drawings in your database.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-stroked-button>Try Advanced Search</button>
+        </mat-card-actions>
+      </mat-card>
+      
+      <mat-card class="admin-tool-card">
+        <mat-card-header>
+          <div class="tool-icon text-purple">
+            <mat-icon>palette</mat-icon>
+          </div>
+          <mat-card-title>Bulk Categorization</mat-card-title>
+          <mat-card-subtitle>Organize multiple drawings at once</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Efficiently categorize multiple drawings with our bulk management tools.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-stroked-button>Start Organizing</button>
+        </mat-card-actions>
+      </mat-card>
+      
+      <mat-card class="admin-tool-card">
+        <mat-card-header>
+          <div class="tool-icon text-amber">
+            <mat-icon>auto_awesome</mat-icon>
+          </div>
+          <mat-card-title>AI Suggestions</mat-card-title>
+          <mat-card-subtitle>Get smart category recommendations</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Our AI analyzes drawings and suggests the most appropriate categories.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-stroked-button>Enable AI Features</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Dashboard Overview -->
+  <section class="container section">
+    <div class="dashboard-overview-grid">
+      <div class="recent-drawings-container">
+        <app-recent-drawings></app-recent-drawings>
+      </div>
+      <div class="popular-categories-container">
+        <app-popular-categories></app-popular-categories>
+      </div>
+    </div>
+  </section>
+</div>

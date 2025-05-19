@@ -3,16 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Typography } from '@mui/material';
 import { fetchCategories } from '../store/slices/categorySlice'; // Import the fetchCategories action
 import { AppDispatch, RootState } from '../store/store'; // Import RootState type
+import { useNavigate } from 'react-router-dom';
 
 const Category: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { list: categories, loading, error } = useSelector((state: RootState) => state.categories) as unknown as { list: { categoryName: string }[]; loading: boolean; error: string | null }; // Access categories state
+  const { list: categories, loading, error } = useSelector((state: RootState) => state.categories) as unknown as { list: { id: string, categoryName: string}[]; loading: boolean; error: string | null }; // Access categories state
 
   useEffect(() => {
     dispatch(fetchCategories()); // Fetch categories on component mount
+    console.log('categories', categories);
+    
   }, [dispatch]);
-// console.log("category component",categories);
-
+  // console.log("category component",categories);
+  const navigate = useNavigate();
   // Define pastel gradients for each category
   const gradients = [
     'linear-gradient(135deg, #84fab0, #8fd3f4)', // Green-Blue
@@ -51,6 +54,14 @@ const Category: React.FC = () => {
     );
   }
 
+  const handleCategoryClick = (categoryName: string) => {
+    console.log('categories', categories);
+    
+    console.log('categoryId', categoryName);
+    
+    navigate(`/paintingsByCategory/${categoryName}`); // מעבר לקומפוננטה של ציורים לפי קטגוריה
+  };
+
   return (
     <Box
       sx={{
@@ -66,6 +77,7 @@ const Category: React.FC = () => {
       {categories.map((category, index) => (
         <Button
           key={index}
+          onClick={() => handleCategoryClick(category.categoryName)} // Pass categoryId to the click handler
           sx={{
             width: '200px', // Uniform width
             height: '50px', // Uniform height

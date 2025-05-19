@@ -1,0 +1,185 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Drawing Library</h1>
+      <p class="page-subtitle">Browse and manage all drawings in the platform</p>
+    </div>
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
+      Add Drawing
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-header>
+      <div class="card-header-content">
+        <div class="title-container">
+          <mat-card-title>Drawings</mat-card-title>
+          <mat-chip *ngIf="filteredDrawings.length > 0">{{ filteredDrawings.length }} items</mat-chip>
+        </div>
+        <div class="filters-container">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search drawings</mat-label>
+            <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()">
+            <mat-icon matPrefix>search</mat-icon>
+            <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''; applyFilters()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select [(value)]="categoryFilter" (selectionChange)="applyFilters()">
+              <mat-option value="all">All Categories</mat-option>
+              <mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select [(value)]="statusFilter" (selectionChange)="applyFilters()">
+              <mat-option value="all">All Status</mat-option>
+              <mat-option value="approved">Approved</mat-option>
+              <mat-option value="pending">Pending</mat-option>
+              <mat-option value="rejected">Rejected</mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-button-toggle-group [(value)]="viewMode" aria-label="View Mode">
+            <mat-button-toggle value="grid" matTooltip="Grid View">
+              <mat-icon>grid_view</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="list" matTooltip="List View">
+              <mat-icon>view_list</mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="loading-container" *ngIf="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+      
+      <!-- Grid View -->
+      <div class="drawings-grid" *ngIf="!loading && viewMode === 'grid'">
+        <mat-card class="drawing-card" *ngFor="let drawing of filteredDrawings">
+          <div class="drawing-image">
+            <img [src]="drawing.imageUrl || 'assets/placeholder.png'" [alt]="drawing.title">
+          </div>
+          <mat-card-content>
+            <div class="drawing-header">
+              <h3 class="drawing-title">{{ drawing.title }}</h3>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item>
+                  <mat-icon>file_download</mat-icon>
+                  <span>Download</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </div>
+            <p class="drawing-user">{{ drawing.user }}</p>
+            <div class="drawing-badges">
+              <mat-chip-list>
+                <mat-chip>{{ drawing.category }}</mat-chip>
+                <mat-chip 
+                  [color]="drawing.status === 'approved' ? 'primary' : drawing.status === 'pending' ? undefined : 'warn'"
+                  [selected]="drawing.status === 'approved'">
+                  {{ drawing.status }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <!-- List View -->
+      <div class="drawings-list" *ngIf="!loading && viewMode === 'list'">
+        <table mat-table [dataSource]="filteredDrawings" class="drawings-table">
+          <!-- Drawing Column -->
+          <ng-container matColumnDef="drawing">
+            <th mat-header-cell *matHeaderCellDef>Drawing</th>
+            <td mat-cell *matCellDef="let drawing">
+              <div class="drawing-info">
+                <div class="drawing-thumbnail">
+                  <img [src]="drawing.imageUrl || 'assets/placeholder.png'" [alt]="drawing.title">
+                </div>
+                <div class="drawing-details">
+                  <div class="drawing-title">{{ drawing.title }}</div>
+                  <div class="drawing-user">{{ drawing.user }}</div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Category Column -->
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef>Category</th>
+            <td mat-cell *matCellDef="let drawing">
+              <mat-chip>{{ drawing.category }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let drawing">
+              <mat-chip 
+                [color]="drawing.status === 'approved' ? 'primary' : drawing.status === 'pending' ? undefined : 'warn'"
+                [selected]="drawing.status === 'approved'">
+                {{ drawing.status }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
+            <td mat-cell *matCellDef="let drawing">
+              <div class="actions-container">
+                <button mat-icon-button matTooltip="Edit">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Download">
+                  <mat-icon>file_download</mat-icon>
+                </button>
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item>
+                    <mat-icon>visibility</mat-icon>
+                    <span>View details</span>
+                  </button>
+                  <button mat-menu-item>
+                    <mat-icon>category</mat-icon>
+                    <span>Change category</span>
+                  </button>
+                  <mat-divider></mat-divider>
+                  <button mat-menu-item class="delete-action">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

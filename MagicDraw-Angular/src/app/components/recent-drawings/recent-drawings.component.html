@@ -1,0 +1,71 @@
+<mat-card class="recent-drawings-card">
+  <mat-card-header>
+    <mat-card-title>Recent Drawings</mat-card-title>
+    <mat-card-subtitle>The latest drawings added to the platform</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="loading-container" *ngIf="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    
+    <div class="drawings-list" *ngIf="!loading">
+      <div class="drawing-item" *ngFor="let drawing of recentDrawings">
+        <div class="drawing-image">
+          <img [src]="drawing.imageUrl || 'assets/placeholder.png'" [alt]="drawing.title">
+        </div>
+        <div class="drawing-details">
+          <div class="drawing-header">
+            <h3>{{ drawing.title }}</h3>
+            <mat-chip-list>
+              <mat-chip>{{ drawing.category }}</mat-chip>
+            </mat-chip-list>
+          </div>
+          <div class="drawing-meta">
+            <div class="user-info">
+              <div class="user-avatar">{{ getUserInitials(drawing.user) }}</div>
+              <span>{{ drawing.user }}</span>
+            </div>
+            <span class="dot-separator">•</span>
+            <span>{{ drawing.createdAt | date }}</span>
+          </div>
+          <div class="drawing-stats">
+            <div class="stat">
+              <mat-icon>visibility</mat-icon>
+              <span>{{ drawing.views }}</span>
+            </div>
+            <div class="stat">
+              <mat-icon>thumb_up</mat-icon>
+              <span>{{ drawing.likes }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="drawing-actions">
+          <button mat-icon-button (click)="likeDrawing(drawing.id)">
+            <mat-icon>thumb_up</mat-icon>
+          </button>
+          <button mat-icon-button>
+            <mat-icon>file_download</mat-icon>
+          </button>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>visibility</mat-icon>
+              <span>View details</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Edit category</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item class="delete-action">
+              <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

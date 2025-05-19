@@ -9,6 +9,6 @@ namespace Children_s_drawing.Core.InterfacesRepositories
 {
     public interface IPaintingRepository:IRepository<Painting>
     {
-        public Task<IEnumerable<Painting>> GetPaintingsByCategoryAsync(string categoryName);
+        //public Task<IEnumerable<Painting>> GetPaintingsByCategoryAsync(string categoryName);
     }
 }

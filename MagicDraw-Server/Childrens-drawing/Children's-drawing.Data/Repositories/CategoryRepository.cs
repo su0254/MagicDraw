@@ -15,7 +15,7 @@ namespace Children_s_drawing.Data.Repositories
 
         public async Task<Category?> GetByNameAsync(string categoryName)
         {
-            return await _dbSet.FirstOrDefaultAsync(c => c.CategoryName.Equals(categoryName));
+            return await _dbSet.Include(c=>c.Paintings).FirstOrDefaultAsync(c => c.CategoryName.Equals(categoryName));
         }
 
     }

@@ -1,0 +1,12 @@
+<mat-card class="stat-card">
+  <mat-card-header>
+    <div class="header-content">
+      <mat-card-title>{{ title }}</mat-card-title>
+      <mat-icon [ngClass]="iconColor">{{ icon }}</mat-icon>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="value">{{ value }}</div>
+    <p class="description" *ngIf="description">{{ description }}</p>
+  </mat-card-content>
+</mat-card>

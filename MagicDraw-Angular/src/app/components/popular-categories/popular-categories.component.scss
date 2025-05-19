@@ -1,0 +1,98 @@
+.popular-categories-card {
+  height: 100%;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.category-count {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.percentage {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  width: 32px;
+  text-align: right;
+}
+
+.view-all-button {
+  margin-top: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-blue {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #2196f3;
+  }
+}
+
+.bg-purple {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #9c27b0;
+  }
+}
+
+.bg-emerald {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #4caf50;
+  }
+}
+
+.bg-cyan {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #00bcd4;
+  }
+}
+
+.bg-amber {
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #ffc107;
+  }
+}
+
+:host-context(.dark-theme) {
+  .category-count, .percentage {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}

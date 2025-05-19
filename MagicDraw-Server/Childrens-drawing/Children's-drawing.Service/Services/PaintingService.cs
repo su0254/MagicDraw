@@ -137,7 +137,8 @@ namespace Children_s_drawing.Service.Services
                 return await Task.FromResult<IEnumerable<Painting>>(new List<Painting>());
             }
 
-            var paintings = await _repositoryManager._paintingRepository.GetPaintingsByCategoryAsync(categoryName);
+            //var paintings = await _repositoryManager._paintingRepository.GetPaintingsByCategoryAsync(categoryName);
+            var paintings = category.Result.Paintings;
             if (paintings != null)
                 await _repositoryManager.SaveAsync();
             return paintings;

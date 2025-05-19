@@ -1,0 +1,169 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Statistics</h1>
+      <p class="page-subtitle">Analyze usage patterns and drawing statistics</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button>
+        <mat-icon>file_download</mat-icon>
+        Export Data
+      </button>
+      <button mat-stroked-button>
+        <mat-icon>date_range</mat-icon>
+        Date Range
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-summary">
+    <app-stat-card 
+      title="Total Users" 
+      [value]="statisticsSummary?.totalUsers || 0" 
+      [description]="statisticsSummary?.userGrowth ? (statisticsSummary.userGrowth > 0 ? '+' : '') + statisticsSummary.userGrowth + '% from last month' : ''" 
+      icon="people"
+      iconColor="text-blue">
+    </app-stat-card>
+    
+    <app-stat-card 
+      title="Total Drawings" 
+      [value]="statisticsSummary?.totalDrawings || 0" 
+      [description]="statisticsSummary?.drawingGrowth ? (statisticsSummary.drawingGrowth > 0 ? '+' : '') + statisticsSummary.drawingGrowth + '% from last month' : ''" 
+      icon="image"
+      iconColor="text-purple">
+    </app-stat-card>
+    
+    <app-stat-card 
+      title="Active Categories" 
+      [value]="statisticsSummary?.activeCategories || 0" 
+      [description]="statisticsSummary?.categoryGrowth ? (statisticsSummary.categoryGrowth > 0 ? '+' : '') + statisticsSummary.categoryGrowth + ' new categories added' : ''" 
+      icon="folder"
+      iconColor="text-primary">
+    </app-stat-card>
+    
+    <app-stat-card 
+      title="Avg. Engagement" 
+      [value]="statisticsSummary?.averageEngagement ? statisticsSummary.averageEngagement + '%' : '0%'" 
+      [description]="statisticsSummary?.engagementGrowth ? (statisticsSummary.engagementGrowth > 0 ? '+' : '') + statisticsSummary.engagementGrowth + '% from last month' : ''" 
+      icon="trending_up"
+      iconColor="text-amber">
+    </app-stat-card>
+  </div>
+
+  <div class="charts-grid">
+    <mat-card class="usage-chart-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <div>
+            <mat-card-title>Usage Analytics</mat-card-title>
+            <mat-card-subtitle>Drawing usage by category over time</mat-card-subtitle>
+          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Time Range</mat-label>
+            <mat-select [(value)]="selectedTimeRange" (selectionChange)="onTimeRangeChange()">
+              <mat-option value="week">Last Week</mat-option>
+              <mat-option value="month">Last Month</mat-option>
+              <mat-option value="year">Last Year</mat-option>
+              <mat-option value="all">All Time</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="loading-container" *ngIf="loadingCharts">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+          <div class="chart-placeholder" *ngIf="!loadingCharts">
+            <mat-icon>show_chart</mat-icon>
+            <span>Usage Analytics Chart</span>
+            <span class="chart-note">(Interactive chart would be here)</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="category-chart-card">
+      <mat-card-header>
+        <mat-card-title>Category Distribution</mat-card-title>
+        <mat-card-subtitle>Drawing distribution by category</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="loading-container" *ngIf="loadingCharts">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+          <div class="chart-placeholder" *ngIf="!loadingCharts">
+            <mat-icon>pie_chart</mat-icon>
+            <span>Category Chart</span>
+            <span class="chart-note">(Interactive chart would be here)</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="detailed-stats-card">
+    <mat-card-header>
+      <div class="card-header-content">
+        <mat-card-title>Detailed Statistics</mat-card-title>
+        <button mat-stroked-button>
+          <mat-icon>file_download</mat-icon>
+          Export
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-tab-group (selectedTabChange)="onTabChange($event)">
+        <mat-tab label="Overview">
+          <div class="tab-content">
+            <div class="loading-container" *ngIf="loadingTabContent">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            <div class="chart-placeholder" *ngIf="!loadingTabContent">
+              <mat-icon>bar_chart</mat-icon>
+              <span>Overview Statistics</span>
+              <span class="chart-note">(Interactive chart would be here)</span>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Categories">
+          <div class="tab-content">
+            <div class="loading-container" *ngIf="loadingTabContent">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            <div class="chart-placeholder" *ngIf="!loadingTabContent">
+              <mat-icon>bar_chart</mat-icon>
+              <span>Category Statistics</span>
+              <span class="chart-note">(Interactive chart would be here)</span>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Users">
+          <div class="tab-content">
+            <div class="loading-container" *ngIf="loadingTabContent">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            <div class="chart-placeholder" *ngIf="!loadingTabContent">
+              <mat-icon>bar_chart</mat-icon>
+              <span>User Statistics</span>
+              <span class="chart-note">(Interactive chart would be here)</span>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Engagement">
+          <div class="tab-content">
+            <div class="loading-container" *ngIf="loadingTabContent">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            <div class="chart-placeholder" *ngIf="!loadingTabContent">
+              <mat-icon>bar_chart</mat-icon>
+              <span>Engagement Statistics</span>
+              <span class="chart-note">(Interactive chart would be here)</span>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

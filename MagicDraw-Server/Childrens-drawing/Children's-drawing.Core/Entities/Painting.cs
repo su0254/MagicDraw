@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Children_s_drawing.Core.Entities
@@ -21,6 +22,7 @@ namespace Children_s_drawing.Core.Entities
 
         [ForeignKey(nameof(CategoryName))]
         public string CategoryName { get; set; }
+        [JsonIgnore]
         public Category MyCategory { get; set; }
         public Painting()
         {

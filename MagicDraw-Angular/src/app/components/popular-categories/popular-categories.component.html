@@ -1,0 +1,38 @@
+<mat-card class="popular-categories-card">
+  <mat-card-header>
+    <div class="header-content">
+      <div>
+        <mat-card-title>Popular Categories</mat-card-title>
+        <mat-card-subtitle>Most used drawing categories</mat-card-subtitle>
+      </div>
+      <mat-button-toggle-group [value]="timeframe" (change)="changeTimeframe($event.value)">
+        <mat-button-toggle value="week">Week</mat-button-toggle>
+        <mat-button-toggle value="month">Month</mat-button-toggle>
+        <mat-button-toggle value="year">Year</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="loading-container" *ngIf="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    
+    <div class="categories-list" *ngIf="!loading">
+      <div class="category-item" *ngFor="let category of categories">
+        <div class="category-header">
+          <div class="category-name">{{ category.name }}</div>
+          <div class="category-count">{{ category.count }} drawings</div>
+        </div>
+        <div class="progress-container">
+          <mat-progress-bar [value]="category.percentage" [ngClass]="category.color"></mat-progress-bar>
+          <div class="percentage">{{ category.percentage }}%</div>
+        </div>
+      </div>
+    </div>
+    
+    <button mat-stroked-button class="view-all-button">
+      View All Categories
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,123 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">User Management</h1>
+      <p class="page-subtitle">Manage user accounts and permissions for the drawing platform</p>
+    </div>
+    <button mat-raised-button color="primary">
+      <mat-icon>person_add</mat-icon>
+      Add User
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-header>
+      <div class="card-header-content">
+        <mat-card-title>Users</mat-card-title>
+        <div class="search-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Search users</mat-label>
+            <input matInput placeholder="Search by name or email" [(ngModel)]="searchTerm">
+            <mat-icon matPrefix>search</mat-icon>
+            <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <button mat-icon-button matTooltip="Filter">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="loading-container" *ngIf="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+      
+      <div class="table-container" *ngIf="!loading">
+        <table mat-table [dataSource]="dataSource" matSort class="users-table">
+          <!-- User Column -->
+          <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="user-info">
+                <div class="user-avatar" [style.background-color]="getAvatarColor(user.name)">
+                  {{ getUserInitials(user.name) }}
+                </div>
+                <div class="user-details">
+                  <div class="user-name">{{ user.name }}</div>
+                  <div class="user-email">{{ user.email }}</div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let user">
+              <mat-chip [color]="user.status === 'active' ? 'primary' : undefined" 
+                       [selected]="user.status === 'active'">
+                {{ user.status }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Role Column -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+            <td mat-cell *matCellDef="let user">{{ user.role }}</td>
+          </ng-container>
+
+          <!-- Drawings Column -->
+          <ng-container matColumnDef="drawings">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Drawings</th>
+            <td mat-cell *matCellDef="let user">{{ user.drawings }}</td>
+          </ng-container>
+
+          <!-- Last Active Column -->
+          <ng-container matColumnDef="lastActive">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Active</th>
+            <td mat-cell *matCellDef="let user">{{ user.lastActive }}</td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="actions-container">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="User actions">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item>
+                    <mat-icon>email</mat-icon>
+                    <span>Send email</span>
+                  </button>
+                  <button mat-menu-item>
+                    <mat-icon>visibility</mat-icon>
+                    <span>View profile</span>
+                  </button>
+                  <button mat-menu-item>
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit user</span>
+                  </button>
+                  <mat-divider></mat-divider>
+                  <button mat-menu-item class="delete-action">
+                    <mat-icon>person_remove</mat-icon>
+                    <span>Deactivate account</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

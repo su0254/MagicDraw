@@ -1,0 +1,85 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Category Management</h1>
+      <p class="page-subtitle">Organize drawings into categories for better organization</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="openAddCategoryDialog()">
+      <mat-icon>create_new_folder</mat-icon>
+      Add Category
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-header>
+      <div class="card-header-content">
+        <div class="title-container">
+          <mat-card-title>Categories</mat-card-title>
+          <mat-chip *ngIf="filteredCategories.length > 0">{{ filteredCategories.length }} items</mat-chip>
+        </div>
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search categories</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()">
+          <mat-icon matPrefix>search</mat-icon>
+          <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''; applyFilter()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="loading-container" *ngIf="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+      
+      <div class="categories-list" *ngIf="!loading">
+        <mat-card class="category-card" *ngFor="let category of filteredCategories">
+          <mat-card-content>
+            <div class="category-header">
+              <div class="category-info">
+                <h3 class="category-name">{{ category.name }}</h3>
+                <mat-chip>{{ category.count }} drawings</mat-chip>
+              </div>
+              <div class="category-actions">
+                <button mat-stroked-button>
+                  <mat-icon>edit</mat-icon>
+                  Edit
+                </button>
+                <button mat-stroked-button color="warn" (click)="confirmDeleteCategory(category)">
+                  <mat-icon>delete</mat-icon>
+                  Delete
+                </button>
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item>
+                    <mat-icon>visibility</mat-icon>
+                    <span>View drawings</span>
+                  </button>
+                  <button mat-menu-item>
+                    <mat-icon>merge_type</mat-icon>
+                    <span>Merge category</span>
+                  </button>
+                  <mat-divider></mat-divider>
+                  <button mat-menu-item class="delete-action">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+            <p class="category-description">{{ category.description }}</p>
+            <div class="usage-container">
+              <div class="usage-header">
+                <span>Usage</span>
+                <span>{{ category.percentage }}%</span>
+              </div>
+              <mat-progress-bar [value]="category.percentage" [ngClass]="category.color"></mat-progress-bar>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

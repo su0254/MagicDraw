@@ -1,318 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import { AppBar, Toolbar, Button, Typography, Box, Container, TextField, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, InputLabel, FormControl, CircularProgress } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
-// import Category from './Category';
-// import HomePageMain from './HomePageMain';
-// import { useAuth } from './AuthContext';
-// import { fetchCategories } from '../store/slices/categorySlice';
-// import { addPainting } from '../store/slices/paintingsSlice'; // ייבוא הפעולה להעלאת ציור
-// import { useDispatch, useSelector } from 'react-redux';
-// import { AppDispatch, RootState } from '../store/store';
-
-// const HomePage: React.FC = () => {
-//   const navigate = useNavigate();
-//   const { isLoggedIn, setIsLoggedIn } = useAuth();
-//   const dispatch = useDispatch<AppDispatch>();
-
-//   const [openUploadDialog, setOpenUploadDialog] = useState(false); // State to manage the dialog visibility
-//   const [selectedFile, setSelectedFile] = useState<File | null>(null); // State to store the selected file
-//   const [paintingName, setPaintingName] = useState(''); // State to store the painting name
-//   const [selectedCategory, setSelectedCategory] = useState(''); // State to store the selected category
-
-//   const { list: categories, loading: categoriesLoading } = useSelector((state: RootState) => state.categories) as unknown as { list: { categoryName: string }[]; loading: boolean };
-
-//   useEffect(() => {
-//     if (isLoggedIn) {
-//       dispatch(fetchCategories()); // Fetch categories when the user is logged in
-//     }
-//   }, [dispatch, isLoggedIn]);
-
-//   const handleLogout = () => {
-//     setIsLoggedIn(false); // עדכון מצב המשתמש ל"לא מחובר"
-//     navigate('/'); // חזרה לעמוד הבית
-//   };
-
-//   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     if (event.target.files && event.target.files.length > 0) {
-//       setSelectedFile(event.target.files[0]);
-//     }
-//   };
-
-//   const handleUpload = async () => {
-//     const userId = localStorage.getItem('userId') || '';
-//     console.log('category', selectedCategory);
-
-//     if (selectedFile && paintingName && selectedCategory) {
-//       const formData = {
-//         fileName: paintingName,
-//         categoryName: selectedCategory,
-//         userId: userId,
-//         imageFile: selectedFile
-//       };
-
-//       try {
-//         await dispatch(addPainting(formData)); // קריאת API להעלאת הציור
-//         alert('הציור הועלה בהצלחה!');
-//         setOpenUploadDialog(false); // סגירת הדיאלוג לאחר העלאה מוצלחת
-//         setPaintingName(''); // איפוס השדות
-//         setSelectedCategory('');
-//         setSelectedFile(null);
-//       } catch (error) {
-//         console.error('שגיאה בהעלאת הציור:', error);
-//         alert('אירעה שגיאה בהעלאת הציור. נסה שוב.');
-//       }
-//     } else {
-//       alert('אנא מלא את כל השדות.');
-//     }
-//   };
-
-//   return (
-//     <Box
-//       sx={{
-//         minHeight: '100vh',
-//         display: 'flex',
-//         flexDirection: 'column',
-//         background: 'linear-gradient(135deg, #fdfbfb, #ebedee)',
-//       }}
-//     >
-//       <AppBar
-//         position="static"
-//         sx={{
-//           background: 'rgba(255, 255, 255, 0.9)',
-//           boxShadow: 'none',
-//           borderBottom: '1px solid #ddd',
-//         }}
-//       >
-//         <Toolbar sx={{ justifyContent: 'space-between' }}>
-//           <Typography
-//             variant="h6"
-//             sx={{
-//               fontWeight: 'bold',
-//               color: '#555',
-//               textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
-//             }}
-//           >
-//             Art Gallery
-//           </Typography>
-//           <Box>
-//             {isLoggedIn && (
-//               <>
-//                 <Button
-//                   sx={{
-//                     margin: '0 10px',
-//                     fontWeight: 'bold',
-//                     borderRadius: '20px',
-//                     background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
-//                     color: '#fff',
-//                     '&:hover': {
-//                       background: 'linear-gradient(135deg, #8fd3f4, #84fab0)',
-//                     },
-//                   }}
-//                   onClick={() => navigate('/personal-area')}
-//                 >
-//                   Personal Area
-//                 </Button>
-//                 <Button
-//                   sx={{
-//                     margin: '0 10px',
-//                     fontWeight: 'bold',
-//                     borderRadius: '20px',
-//                     background: 'linear-gradient(135deg, #a18cd1, #fbc2eb)',
-//                     color: '#fff',
-//                     '&:hover': {
-//                       background: 'linear-gradient(135deg, #fbc2eb, #a18cd1)',
-//                     },
-//                   }}
-//                   onClick={handleLogout}
-//                 >
-//                   Logout
-//                 </Button>
-//               </>
-//             )}
-//             {!isLoggedIn && (
-//               <>
-//                 <Button
-//                   sx={{
-//                     margin: '0 10px',
-//                     fontWeight: 'bold',
-//                     borderRadius: '20px',
-//                     background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
-//                     color: '#fff',
-//                     '&:hover': {
-//                       background: 'linear-gradient(135deg, #8fd3f4, #84fab0)',
-//                     },
-//                   }}
-//                   onClick={() => navigate('/register')}
-//                 >
-//                   Register
-//                 </Button>
-//                 <Button
-//                   sx={{
-//                     margin: '0 10px',
-//                     fontWeight: 'bold',
-//                     borderRadius: '20px',
-//                     background: 'linear-gradient(135deg, #ff9a9e, #fad0c4)',
-//                     color: '#fff',
-//                     '&:hover': {
-//                       background: 'linear-gradient(135deg, #fad0c4, #ff9a9e)',
-//                     },
-//                   }}
-//                   onClick={() => navigate('/login')}
-//                 >
-//                   Login
-//                 </Button>
-//               </>
-//             )}
-//           </Box>
-//         </Toolbar>
-//       </AppBar>
-
-//       <Container
-//         sx={{
-//           flex: 1,
-//           display: 'flex',
-//           flexDirection: 'column',
-//           justifyContent: 'center',
-//           alignItems: 'center',
-//           textAlign: 'center',
-//           padding: '20px',
-//         }}
-//       >
-//         <Typography
-//           variant="h3"
-//           gutterBottom
-//           sx={{
-//             fontWeight: 'bold',
-//             color: '#333',
-//             textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
-//           }}
-//         >
-//           Welcome to the Art Gallery
-//         </Typography>
-//         <Typography
-//           variant="subtitle1"
-//           sx={{
-//             color: '#555',
-//             maxWidth: '600px',
-//             marginBottom: '20px',
-//           }}
-//         >
-//           Discover, explore, and enjoy beautiful paintings from around the world. Let your creativity and imagination soar.
-//         </Typography>
-//         {isLoggedIn && (
-//           <Button
-//             sx={{
-//               margin: '0 10px',
-//               fontWeight: 'bold',
-//               borderRadius: '20px',
-//               background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
-//               color: '#fff',
-//               '&:hover': {
-//                 background: 'linear-gradient(135deg, #8fd3f4, #84fab0)',
-//               },
-//             }}
-//             onClick={() => setOpenUploadDialog(true)} // Open the dialog
-//           >
-//             העלאת ציור
-//           </Button>
-//         )}
-//       </Container>
-//       <Category />
-//       <HomePageMain />
-
-//       {/* Dialog for uploading a painting */}
-//       <Dialog open={openUploadDialog} onClose={() => setOpenUploadDialog(false)}>
-//         <DialogTitle>העלאת ציור</DialogTitle>
-//         <DialogContent>
-//           <TextField
-//             label="שם הציור"
-//             fullWidth
-//             margin="normal"
-//             value={paintingName}
-//             onChange={(e) => setPaintingName(e.target.value)}
-//           />
-//           <FormControl fullWidth margin="normal">
-//             <InputLabel id="category-label">קטגוריה</InputLabel>
-//             <Select
-//               labelId="category-label"
-//               value={selectedCategory}
-//               onChange={(e) => setSelectedCategory(e.target.value)}
-//               MenuProps={{
-//                 PaperProps: {
-//                   style: {
-//                     maxHeight: 200, // גובה מקסימלי לגלילה
-//                     overflowY: 'auto', // גלילה אנכית
-//                   },
-//                 },
-//               }}
-//               sx={{
-//                 background: 'rgba(255, 255, 255, 0.9)',
-//                 borderRadius: '10px',
-//                 boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-//               }}
-//             >
-//               {categoriesLoading ? (
-//                 <MenuItem disabled>
-//                   <CircularProgress size={20} />
-//                 </MenuItem>
-//               ) : (
-//                 categories.map((category, index) => (
-//                   <MenuItem
-//                     key={index}
-//                     value={category.categoryName}
-//                     sx={{
-//                       fontWeight: 'bold',
-//                       color: '#555',
-//                       '&:hover': {
-//                         background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
-//                         color: '#fff',
-//                       },
-//                     }}
-//                   >
-//                     {category.categoryName}
-//                   </MenuItem>
-//                 ))
-//               )}
-//             </Select>
-//           </FormControl>
-//           <Button
-//             variant="contained"
-//             component="label"
-//             sx={{
-//               marginTop: '10px',
-//               background: 'linear-gradient(135deg, #84fab0, #8fd3f4)',
-//               color: '#fff',
-//               '&:hover': {
-//                 background: 'linear-gradient(135deg, #8fd3f4, #84fab0)',
-//               },
-//             }}
-//           >
-//             בחר קובץ
-//             <input type="file" accept="image/*" hidden onChange={handleFileChange} />
-//           </Button>
-//           {selectedFile && (
-//             <Typography variant="body2" sx={{ marginTop: '10px' }}>
-//               קובץ שנבחר: {selectedFile.name}
-//             </Typography>
-//           )}
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={() => setOpenUploadDialog(false)} color="secondary">
-//             ביטול
-//           </Button>
-//           <Button onClick={handleUpload} color="primary">
-//             העלאה
-//           </Button>
-//         </DialogActions>
-//       </Dialog>
-//     </Box>
-//   );
-// };
-
-// export default HomePage;
-
-"use client"
-
 import type React from "react"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -326,8 +11,7 @@ import HomePageMain from "./HomePageMain"
 
 // Material UI imports
 import {
-  AppBar,
-  Toolbar,
+  AppBar, Toolbar,
   Button,
   Typography,
   Box,
@@ -345,8 +29,7 @@ import {
   Paper,
   IconButton,
   Tooltip,
-  // useMediaQuery,
-  // useTheme,
+  Grid,
 } from "@mui/material"
 
 // Icons
@@ -575,102 +258,108 @@ const HomePage: React.FC = () => {
       </AppBar>
 
       <Container maxWidth="lg" sx={{ mt: 6, mb: 8 }}>
-        <Paper
-          elevation={0}
-          sx={{
-            borderRadius: "24px",
-            overflow: "hidden",
-            background: "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
-            backdropFilter: "blur(10px)",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-            mb: 6,
-            position: "relative",
-            border: "3px solid #FFB7B2",
-          }}
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              opacity: 0.05,
-              backgroundImage: 'url("/placeholder.svg?height=600&width=1200")',
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              zIndex: 0,
-            }}
-          />
-
-          <Box
-            sx={{
-              position: "relative",
-              zIndex: 1,
-              p: { xs: 4, md: 6 },
-              textAlign: "center",
-            }}
-          >
-            <Typography
-              variant="h2"
-              component="h1"
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8}>
+            <Paper
+              elevation={0}
               sx={{
-                fontWeight: 800,
-                color: "#FF9AA2",
-                mb: 2,
-                fontFamily: '"Comic Sans MS", cursive, sans-serif',
-                textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
+                borderRadius: "24px",
+                overflow: "hidden",
+                background: "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
+                backdropFilter: "blur(10px)",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+                mb: 6,
+                position: "relative",
+                border: "3px solid #FFB7B2",
               }}
             >
-              <span style={{ color: "#FF9AA2" }}>ברוכים</span> <span style={{ color: "#FFDAC1" }}>הבאים</span>{" "}
-              <span style={{ color: "#E2F0CB" }}>לגלריה!</span>
-            </Typography>
-
-            <Typography
-              variant="h6"
-              sx={{
-                color: "#546e7a",
-                maxWidth: "800px",
-                mx: "auto",
-                mb: 4,
-                lineHeight: 1.6,
-                fontFamily: '"Comic Sans MS", cursive, sans-serif',
-              }}
-            >
-              גלו, חקרו ותיהנו מציורי ילדים מדהימים. תנו לדמיון והיצירתיות שלכם לפרוח.
-            </Typography>
-
-            {isLoggedIn && (
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={<BrushIcon />}
-                onClick={() => setOpenUploadDialog(true)}
+              <Box
                 sx={{
-                  borderRadius: "30px",
-                  py: 1.5,
-                  px: 4,
-                  background: "linear-gradient(45deg, #FFDAC1, #FFC8A2)",
-                  boxShadow: "0 4px 20px rgba(255, 218, 193, 0.4)",
-                  textTransform: "none",
-                  fontSize: "1.1rem",
-                  fontWeight: 600,
-                  fontFamily: '"Comic Sans MS", cursive, sans-serif',
-                  color: "#fff",
-                  "&:hover": {
-                    background: "linear-gradient(45deg, #FFC8A2, #FFDAC1)",
-                    boxShadow: "0 6px 25px rgba(255, 218, 193, 0.5)",
-                  },
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  opacity: 0.05,
+                  backgroundImage: 'url("/placeholder.svg?height=600&width=1200")',
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  zIndex: 0,
+                }}
+              />
+
+              <Box
+                sx={{
+                  position: "relative",
+                  zIndex: 1,
+                  p: { xs: 4, md: 6 },
+                  textAlign: "center",
                 }}
               >
-                העלאת ציור חדש
-              </Button>
-            )}
-          </Box>
-        </Paper>
+                <Typography
+                  variant="h2"
+                  component="h1"
+                  sx={{
+                    fontWeight: 800,
+                    color: "#FF9AA2",
+                    mb: 2,
+                    fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                    textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  <span style={{ color: "#FF9AA2" }}>ברוכים</span> <span style={{ color: "#FFDAC1" }}>הבאים</span>{" "}
+                  <span style={{ color: "#E2F0CB" }}>לגלריה!</span>
+                </Typography>
 
-        <Category />
-        <HomePageMain />
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: "#546e7a",
+                    maxWidth: "800px",
+                    mx: "auto",
+                    mb: 4,
+                    lineHeight: 1.6,
+                    fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                  }}
+                >
+                  גלו, חקרו ותיהנו מציורי ילדים מדהימים. תנו לדמיון והיצירתיות שלכם לפרוח.
+                </Typography>
+
+                {isLoggedIn && (
+                  <Button
+                    variant="contained"
+                    size="large"
+                    startIcon={<BrushIcon />}
+                    onClick={() => setOpenUploadDialog(true)}
+                    sx={{
+                      borderRadius: "30px",
+                      py: 1.5,
+                      px: 4,
+                      background: "linear-gradient(45deg, #FFDAC1, #FFC8A2)",
+                      boxShadow: "0 4px 20px rgba(255, 218, 193, 0.4)",
+                      textTransform: "none",
+                      fontSize: "1.1rem",
+                      fontWeight: 600,
+                      fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                      color: "#fff",
+                      "&:hover": {
+                        background: "linear-gradient(45deg, #FFC8A2, #FFDAC1)",
+                        boxShadow: "0 6px 25px rgba(255, 218, 193, 0.5)",
+                      },
+                    }}
+                  >
+                    העלאת ציור חדש
+                  </Button>
+                )}
+              </Box>
+            </Paper>
+
+            <HomePageMain />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Category />
+          </Grid>
+        </Grid>
       </Container>
 
       {/* Dialog for uploading a painting */}
@@ -883,6 +572,453 @@ const HomePage: React.FC = () => {
       </Dialog>
     </Box>
   )
+
+  // return (
+  //   <Box
+  //     sx={{
+  //       minHeight: "100vh",
+  //       display: "flex",
+  //       flexDirection: "column",
+  //       background: "linear-gradient(135deg, #FAFAFA 0%, #F0F0F0 100%)",
+  //       fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //     }}
+  //   >
+  //     <AppBar
+  //       position="static"
+  //       elevation={0}
+  //       sx={{
+  //         background: "rgba(255, 255, 255, 0.9)",
+  //         backdropFilter: "blur(10px)",
+  //         borderBottom: "3px solid #FFB7B2",
+  //       }}
+  //     >
+  //       <Toolbar sx={{ justifyContent: "space-between" }}>
+  //         <Typography
+  //           variant="h5"
+  //           sx={{
+  //             fontWeight: 800,
+  //             color: "#FF9AA2",
+  //             fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //             letterSpacing: "0.5px",
+  //             textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+  //             display: "flex",
+  //             alignItems: "center",
+  //             gap: 1,
+  //           }}
+  //         >
+  //           <PaletteIcon sx={{ color: "#FFDAC1" }} />
+  //           <span style={{ color: "#FF9AA2" }}>MagicDraw -</span>
+  //           <span style={{ color: "#FFDAC1" }}>ציור</span>
+  //           <span style={{ color: "#E2F0CB" }}>קסם של</span>
+  //         </Typography>
+
+  //         <Box sx={{ display: "flex", gap: 1 }}>
+  //           {isLoggedIn ? (
+  //             <>
+  //               <Tooltip title="אזור אישי">
+  //                 <Button
+  //                   variant="contained"
+  //                   startIcon={<PersonIcon />}
+  //                   onClick={() => navigate("/personal-area")}
+  //                   sx={{
+  //                     borderRadius: "20px",
+  //                     background: "linear-gradient(45deg, #FF9AA2, #FFB7B2)",
+  //                     boxShadow: "0 4px 10px rgba(255, 154, 162, 0.3)",
+  //                     textTransform: "none",
+  //                     fontWeight: 600,
+  //                     fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //                     "&:hover": {
+  //                       background: "linear-gradient(45deg, #FFB7B2, #FF9AA2)",
+  //                       boxShadow: "0 6px 15px rgba(255, 154, 162, 0.4)",
+  //                     },
+  //                   }}
+  //                 >
+  //                   אזור אישי
+  //                 </Button>
+  //               </Tooltip>
+
+  //               <Tooltip title="התנתק">
+  //                 <Button
+  //                   variant="outlined"
+  //                   startIcon={<LogoutIcon />}
+  //                   onClick={handleLogout}
+  //                   sx={{
+  //                     borderRadius: "20px",
+  //                     borderColor: "#FF9AA2",
+  //                     color: "#FF9AA2",
+  //                     textTransform: "none",
+  //                     fontWeight: 600,
+  //                     fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //                     "&:hover": {
+  //                       borderColor: "#FFB7B2",
+  //                       background: "rgba(255, 154, 162, 0.05)",
+  //                     },
+  //                   }}
+  //                 >
+  //                   התנתק
+  //                 </Button>
+  //               </Tooltip>
+  //             </>
+  //           ) : (
+  //             <>
+  //               <Tooltip title="הרשמה">
+  //                 <Button
+  //                   variant="contained"
+  //                   startIcon={<HowToRegIcon />}
+  //                   onClick={() => navigate("/register")}
+  //                   sx={{
+  //                     borderRadius: "20px",
+  //                     background: "linear-gradient(45deg, #FF9AA2, #FFB7B2)",
+  //                     boxShadow: "0 4px 10px rgba(255, 154, 162, 0.3)",
+  //                     textTransform: "none",
+  //                     fontWeight: 600,
+  //                     fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //                     "&:hover": {
+  //                       background: "linear-gradient(45deg, #FFB7B2, #FF9AA2)",
+  //                       boxShadow: "0 6px 15px rgba(255, 154, 162, 0.4)",
+  //                     },
+  //                   }}
+  //                 >
+  //                   הרשמה
+  //                 </Button>
+  //               </Tooltip>
+
+  //               <Tooltip title="התחברות">
+  //                 <Button
+  //                   variant="outlined"
+  //                   startIcon={<LoginIcon />}
+  //                   onClick={() => navigate("/login")}
+  //                   sx={{
+  //                     borderRadius: "20px",
+  //                     borderColor: "#FF9AA2",
+  //                     color: "#FF9AA2",
+  //                     textTransform: "none",
+  //                     fontWeight: 600,
+  //                     fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //                     "&:hover": {
+  //                       borderColor: "#FFB7B2",
+  //                       background: "rgba(255, 154, 162, 0.05)",
+  //                     },
+  //                   }}
+  //                 >
+  //                   התחברות
+  //                 </Button>
+  //               </Tooltip>
+  //             </>
+  //           )}
+  //         </Box>
+  //       </Toolbar>
+  //     </AppBar>
+
+  //     <Container maxWidth="lg" sx={{ mt: 6, mb: 8 }}>
+  //       <Paper
+  //         elevation={0}
+  //         sx={{
+  //           borderRadius: "24px",
+  //           overflow: "hidden",
+  //           background: "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
+  //           backdropFilter: "blur(10px)",
+  //           boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+  //           mb: 6,
+  //           position: "relative",
+  //           border: "3px solid #FFB7B2",
+  //         }}
+  //       >
+  //         <Box
+  //           sx={{
+  //             position: "absolute",
+  //             top: 0,
+  //             left: 0,
+  //             right: 0,
+  //             bottom: 0,
+  //             opacity: 0.05,
+  //             backgroundImage: 'url("/placeholder.svg?height=600&width=1200")',
+  //             backgroundSize: "cover",
+  //             backgroundPosition: "center",
+  //             zIndex: 0,
+  //           }}
+  //         />
+
+  //         <Box
+  //           sx={{
+  //             position: "relative",
+  //             zIndex: 1,
+  //             p: { xs: 4, md: 6 },
+  //             textAlign: "center",
+  //           }}
+  //         >
+  //           <Typography
+  //             variant="h2"
+  //             component="h1"
+  //             sx={{
+  //               fontWeight: 800,
+  //               color: "#FF9AA2",
+  //               mb: 2,
+  //               fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //               textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
+  //             }}
+  //           >
+  //             <span style={{ color: "#FF9AA2" }}>ברוכים</span> <span style={{ color: "#FFDAC1" }}>הבאים</span>{" "}
+  //             <span style={{ color: "#E2F0CB" }}>לגלריה!</span>
+  //           </Typography>
+
+  //           <Typography
+  //             variant="h6"
+  //             sx={{
+  //               color: "#546e7a",
+  //               maxWidth: "800px",
+  //               mx: "auto",
+  //               mb: 4,
+  //               lineHeight: 1.6,
+  //               fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //             }}
+  //           >
+  //             גלו, חקרו ותיהנו מציורי ילדים מדהימים. תנו לדמיון והיצירתיות שלכם לפרוח.
+  //           </Typography>
+
+  //           {isLoggedIn && (
+  //             <Button
+  //               variant="contained"
+  //               size="large"
+  //               startIcon={<BrushIcon />}
+  //               onClick={() => setOpenUploadDialog(true)}
+  //               sx={{
+  //                 borderRadius: "30px",
+  //                 py: 1.5,
+  //                 px: 4,
+  //                 background: "linear-gradient(45deg, #FFDAC1, #FFC8A2)",
+  //                 boxShadow: "0 4px 20px rgba(255, 218, 193, 0.4)",
+  //                 textTransform: "none",
+  //                 fontSize: "1.1rem",
+  //                 fontWeight: 600,
+  //                 fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //                 color: "#fff",
+  //                 "&:hover": {
+  //                   background: "linear-gradient(45deg, #FFC8A2, #FFDAC1)",
+  //                   boxShadow: "0 6px 25px rgba(255, 218, 193, 0.5)",
+  //                 },
+  //               }}
+  //             >
+  //               העלאת ציור חדש
+  //             </Button>
+  //           )}
+  //         </Box>
+  //       </Paper>
+
+  //       <Category />
+  //       <HomePageMain />
+  //     </Container>
+
+  //     {/* Dialog for uploading a painting */}
+  //     <Dialog
+  //       open={openUploadDialog}
+  //       onClose={closeUploadDialog}
+  //       PaperProps={{
+  //         sx: {
+  //           borderRadius: "16px",
+  //           boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+  //           maxWidth: "500px",
+  //           width: "100%",
+  //           border: "3px solid #FFB7B2",
+  //           fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //         },
+  //       }}
+  //     >
+  //       <DialogTitle
+  //         sx={{
+  //           background: "linear-gradient(45deg, #FF9AA2, #FFB7B2)",
+  //           color: "white",
+  //           display: "flex",
+  //           justifyContent: "space-between",
+  //           alignItems: "center",
+  //           py: 2,
+  //           fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //         }}
+  //       >
+  //         <Typography variant="h6" sx={{ fontWeight: 600, fontFamily: '"Comic Sans MS", cursive, sans-serif' }}>
+  //           העלאת ציור חדש
+  //         </Typography>
+  //         <IconButton edge="end" color="inherit" onClick={closeUploadDialog} aria-label="close" size="small">
+  //           <CloseIcon />
+  //         </IconButton>
+  //       </DialogTitle>
+
+  //       <DialogContent sx={{ pt: 3, pb: 1 }}>
+  //         <TextField
+  //           label="שם הציור"
+  //           fullWidth
+  //           margin="normal"
+  //           value={paintingName}
+  //           onChange={(e) => setPaintingName(e.target.value)}
+  //           variant="outlined"
+  //           InputProps={{
+  //             sx: {
+  //               borderRadius: "12px",
+  //               fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //             },
+  //           }}
+  //           InputLabelProps={{
+  //             sx: {
+  //               fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //             },
+  //           }}
+  //         />
+
+  //         <FormControl fullWidth margin="normal">
+  //           <InputLabel id="category-label" sx={{ fontFamily: '"Comic Sans MS", cursive, sans-serif' }}>
+  //             קטגוריה
+  //           </InputLabel>
+  //           <Select
+  //             labelId="category-label"
+  //             value={selectedCategory}
+  //             onChange={(e) => setSelectedCategory(e.target.value)}
+  //             MenuProps={{
+  //               PaperProps: {
+  //                 style: {
+  //                   maxHeight: 200,
+  //                   overflowY: "auto",
+  //                 },
+  //               },
+  //             }}
+  //             sx={{
+  //               borderRadius: "12px",
+  //               fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //             }}
+  //           >
+  //             {categoriesLoading ? (
+  //               <MenuItem disabled>
+  //                 <CircularProgress size={20} />
+  //               </MenuItem>
+  //             ) : (
+  //               categories.map((category, index) => (
+  //                 <MenuItem
+  //                   key={index}
+  //                   value={category.categoryName}
+  //                   sx={{
+  //                     fontWeight: 500,
+  //                     fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //                     "&:hover": {
+  //                       background: "rgba(255, 154, 162, 0.1)",
+  //                     },
+  //                     "&.Mui-selected": {
+  //                       background: "rgba(255, 154, 162, 0.2)",
+  //                     },
+  //                   }}
+  //                 >
+  //                   {category.categoryName}
+  //                 </MenuItem>
+  //               ))
+  //             )}
+  //           </Select>
+  //         </FormControl>
+
+  //         <Box
+  //           sx={{
+  //             mt: 3,
+  //             mb: 2,
+  //             display: "flex",
+  //             flexDirection: "column",
+  //             alignItems: "center",
+  //             gap: 2,
+  //           }}
+  //         >
+  //           <Button
+  //             variant="outlined"
+  //             component="label"
+  //             startIcon={<CloudUploadIcon />}
+  //             sx={{
+  //               borderRadius: "12px",
+  //               borderColor: "#FF9AA2",
+  //               color: "#FF9AA2",
+  //               p: 1.5,
+  //               fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //               "&:hover": {
+  //                 borderColor: "#FFB7B2",
+  //                 background: "rgba(255, 154, 162, 0.05)",
+  //               },
+  //             }}
+  //           >
+  //             בחר קובץ תמונה
+  //             <input type="file" accept="image/*" hidden onChange={handleFileChange} />
+  //           </Button>
+
+  //           {previewUrl && (
+  //             <Box
+  //               sx={{
+  //                 width: "100%",
+  //                 display: "flex",
+  //                 flexDirection: "column",
+  //                 alignItems: "center",
+  //                 gap: 1,
+  //               }}
+  //             >
+  //               <Paper
+  //                 elevation={0}
+  //                 sx={{
+  //                   p: 1,
+  //                   borderRadius: "12px",
+  //                   border: "2px solid #FFB7B2",
+  //                   width: "100%",
+  //                   maxWidth: "300px",
+  //                 }}
+  //               >
+  //                 <img
+  //                   src={previewUrl || "/placeholder.svg"}
+  //                   alt="תצוגה מקדימה"
+  //                   style={{
+  //                     width: "100%",
+  //                     height: "auto",
+  //                     borderRadius: "8px",
+  //                     objectFit: "contain",
+  //                   }}
+  //                 />
+  //               </Paper>
+  //               <Typography
+  //                 variant="body2"
+  //                 color="text.secondary"
+  //                 sx={{ fontFamily: '"Comic Sans MS", cursive, sans-serif' }}
+  //               >
+  //                 {selectedFile?.name}
+  //               </Typography>
+  //             </Box>
+  //           )}
+  //         </Box>
+  //       </DialogContent>
+
+  //       <DialogActions sx={{ px: 3, pb: 3, pt: 1 }}>
+  //         <Button
+  //           onClick={closeUploadDialog}
+  //           sx={{
+  //             color: "#FF9AA2",
+  //             borderRadius: "10px",
+  //             textTransform: "none",
+  //             fontWeight: 600,
+  //             fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //           }}
+  //         >
+  //           ביטול
+  //         </Button>
+  //         <Button
+  //           onClick={handleUpload}
+  //           variant="contained"
+  //           sx={{
+  //             borderRadius: "10px",
+  //             background: "linear-gradient(45deg, #FF9AA2, #FFB7B2)",
+  //             textTransform: "none",
+  //             fontWeight: 600,
+  //             px: 3,
+  //             fontFamily: '"Comic Sans MS", cursive, sans-serif',
+  //             "&:hover": {
+  //               background: "linear-gradient(45deg, #FFB7B2, #FF9AA2)",
+  //             },
+  //           }}
+  //         >
+  //           העלאה
+  //         </Button>
+  //       </DialogActions>
+  //     </Dialog>
+  //   </Box>
+  // )
 }
 
 export default HomePage

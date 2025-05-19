@@ -1,0 +1,141 @@
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+  
+  @media (min-width: 576px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+  
+  @media (min-width: 992px) {
+    grid-template-columns: 5fr 2fr;
+  }
+}
+
+.card-header-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 16px;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    
+    @media (min-width: 768px) {
+      width: 150px;
+    }
+  }
+}
+
+.chart-container {
+  height: 300px;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.chart-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: rgba(0, 0, 0, 0.6);
+  
+  mat-icon {
+    font-size: 32px;
+    height: 32px;
+    width: 32px;
+    margin-bottom: 8px;
+  }
+  
+  .chart-note {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}
+
+.detailed-stats-card {
+  margin-bottom: 24px;
+}
+
+.tab-content {
+  height: 400px;
+  padding: 16px 0;
+}
+
+:host-context(.dark-theme) {
+  .page-subtitle {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .chart-container {
+    border-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+  
+  .chart-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}

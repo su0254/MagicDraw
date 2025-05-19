@@ -51,7 +51,8 @@ export const fetchPaintingsByCategory = createAsyncThunk(
   'paintings/fetchByCategory',
   async (categoryId: string, thunkAPI) => {
     try {
-      const response = await axios.get(`${baseUrl}Painting/Category/${categoryId}`);
+      console.log('categoryId', categoryId);
+      const response = await axios.get(`${baseUrl}Painting/GetByCategory/${categoryId}`);
       return response.data; // Return the list of paintings for the given category
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);

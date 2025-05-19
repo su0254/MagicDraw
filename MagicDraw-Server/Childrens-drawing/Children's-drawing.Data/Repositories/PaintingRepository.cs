@@ -19,10 +19,10 @@ namespace Children_s_drawing.Data.Repositories
         {
             //_paintingDbSet = dataContext.Set<Painting>();
         }
-        public async Task<IEnumerable<Painting>> GetPaintingsByCategoryAsync(string categoryName)
-        {
-            return await _dbSet.Where(p => p.CategoryName == categoryName).ToListAsync();
-        }
+        //public async Task<IEnumerable<Painting>> GetPaintingsByCategoryAsync(string categoryName)
+        //{
+        //    return await _dbSet.Where(p => p.CategoryName == categoryName).ToListAsync();
+        //}
     }
 }
 
