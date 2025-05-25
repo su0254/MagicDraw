@@ -1,7 +1,6 @@
 ﻿using Children_s_drawing.Core.Entities;
 using Children_s_drawing.Core.InterfacesRepositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;

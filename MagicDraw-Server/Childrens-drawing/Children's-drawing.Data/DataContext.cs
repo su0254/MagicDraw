@@ -1,4 +1,5 @@
 ﻿using Children_s_drawing.Core.Entities;
+using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -29,8 +30,11 @@ namespace Children_s_drawing.Data
         //localhost
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-601KITQ\\SQLEXPRESS01; Initial Catalog=Magic_Draw; Integrated Security=True; TrustServerCertificate=True");
+            DotEnv.Load();
+            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), options => options.CommandTimeout(60));
         }
+
         //
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{

@@ -87,4 +87,17 @@ export class DrawingService {
       })
     );
   }
+
+  getDrawingsByCategory(categoryName: string): Observable<Drawing[]> {
+    return this.http.get<Drawing[]>(`${this.apiUrl}/category/${categoryName}`).pipe(
+      tap((drawings) => {
+        console.log("Fetched drawings by category:", drawings);
+        this.drawingsSubject.next(drawings);
+      }),
+      catchError((error) => {
+        console.error("Error fetching drawings by category:", error);
+        return of([]);
+      })
+    );
+  }
 }

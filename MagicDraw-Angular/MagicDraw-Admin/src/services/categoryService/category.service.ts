@@ -63,6 +63,10 @@ export class CategoryService {
     });
   }
 
+  getCategoryByName(name: string): void {
+    
+  }
+
   private refreshCategories(): void {
     this.getAllCategories();
   }

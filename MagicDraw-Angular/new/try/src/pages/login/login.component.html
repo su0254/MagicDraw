@@ -1,0 +1,50 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <div class="login-header">
+        <mat-icon class="login-icon">brush</mat-icon>
+        <mat-card-title>Welcome back</mat-card-title>
+        <mat-card-subtitle>Enter your credentials to access the admin dashboard</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm!" (ngSubmit)="onSubmit()" class="login-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder="admin@example.com" required type="email">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="loginForm?.get('email')?.hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="loginForm?.get('email')?.hasError('email')">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+        
+        <div class="password-field-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" required>
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginForm?.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+          <a href="#" class="forgot-password">Forgot password?</a>
+        </div>
+        
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm?.invalid || isLoading" class="login-button">
+          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+          <span *ngIf="!isLoading">Sign in</span>
+        </button>
+        
+        <div class="login-footer">
+          Don't have an account? <a href="#">Contact administrator</a>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

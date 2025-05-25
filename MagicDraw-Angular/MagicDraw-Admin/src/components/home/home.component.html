@@ -6,7 +6,7 @@
         <span>MagicDraw</span>
       </div>
     </div>
-    
+
     <mat-nav-list>
       <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
         <mat-icon matListItemIcon>dashboard</mat-icon>
@@ -28,9 +28,9 @@
         <mat-icon matListItemIcon>bar_chart</mat-icon>
         <span matListItemTitle>סטטיסטיקות</span>
       </a>
-      
+
       <mat-divider></mat-divider>
-      
+
       <a mat-list-item>
         <mat-icon matListItemIcon>settings</mat-icon>
         <span matListItemTitle>הגדרות</span>
@@ -41,14 +41,14 @@
       </a>
     </mat-nav-list>
   </mat-sidenav>
-  
+
   <mat-sidenav-content class="sidenav-content">
     <app-header (toggleSidenav)="toggleSidenav()"></app-header>
-    
+
     <div class="main-content">
       <div class="dashboard-container">
         <h1 class="page-title">לוח בקרה</h1>
-        
+
         <div class="stat-cards">
           <mat-card *ngFor="let card of statCards" class="stat-card">
             <div class="stat-card-content">
@@ -62,7 +62,7 @@
             </div>
           </mat-card>
         </div>
-        
+
         <div class="dashboard-row">
           <mat-card class="dashboard-card recent-activity">
             <mat-card-header>
@@ -83,7 +83,7 @@
               <button mat-button color="primary">צפה בכל</button>
             </mat-card-actions>
           </mat-card>
-          
+
           <mat-card class="dashboard-card popular-categories">
             <mat-card-header>
               <mat-card-title>קטגוריות פופולריות</mat-card-title>
@@ -94,18 +94,25 @@
                   <span class="category-name">{{ category.name }}</span>
                   <span class="category-count">{{ category.count }} ציורים</span>
                 </div>
-                <mat-progress-bar
+
+
+                <!-- <mat-progress-bar
                   [value]="category.percentage"
                   [color]="'primary'"
-                ></mat-progress-bar>
+                ></mat-progress-bar> -->
               </div>
             </mat-card-content>
+            <div class="chart-container">
+              <!-- <canvas baseChart [datasets]="[{ data: barChartData, label: 'ציורים לפי קטגוריה' }]"
+                [labels]="barChartLabels" [chartType]="barChartType">
+              </canvas> -->
+            </div>
             <mat-card-actions align="end">
               <button mat-button color="primary">צפה בכל הקטגוריות</button>
             </mat-card-actions>
           </mat-card>
         </div>
-        
+
         <div class="dashboard-row">
           <mat-card class="dashboard-card full-width">
             <mat-card-header>
@@ -120,7 +127,7 @@
         </div>
       </div>
     </div>
-    
+
     <app-footer></app-footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

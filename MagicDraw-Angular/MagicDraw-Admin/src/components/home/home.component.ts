@@ -14,6 +14,7 @@ import { MatProgressBar } from "@angular/material/progress-bar";
 import { CommonModule } from "@angular/common";
 import { HeaderComponent } from "../../shareds/header/header/header.component";
 import { FooterComponent } from "../../shareds/footer/footer/footer.component";
+import { ChartType } from 'chart.js';
 
 interface StatCard {
   title: string
@@ -34,13 +35,27 @@ interface RecentActivity {
   selector: "app-home",
   imports: [MatSidenavModule, MatIcon, MatNavList, MatDivider, HeaderComponent
     , MatCard, MatCardHeader, MatCardContent, MatCardActions, MatCardTitle
-  , MatList, MatListItem, MatProgressBar, FooterComponent, CommonModule],
+  , MatList, MatListItem, FooterComponent, CommonModule],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"],
   
 })
 export class HomeComponent {
   sidenavOpened = true
+
+    // נתוני הקטגוריות
+  popularCategories = [
+    { name: "Animals", count: 1245 },
+    { name: "Nature", count: 982 },
+    { name: "Fantasy", count: 753 },
+    { name: "Space", count: 621 },
+    { name: "Vehicles", count: 489 },
+  ];
+
+  // נתוני הגרף
+  public barChartLabels: string[] = this.popularCategories.map(c => c.name);
+  public barChartData: number[] = this.popularCategories.map(c => c.count);
+  public barChartType: ChartType = 'bar';
 
   statCards: StatCard[] = [
     { title: "Total Users", value: 1254, icon: "people", color: "#3f51b5" },
@@ -57,13 +72,13 @@ export class HomeComponent {
     { id: 5, action: "User updated profile", user: "Sophia Williams", time: "3 hours ago", icon: "edit" },
   ]
 
-  popularCategories = [
-    { name: "Animals", count: 1245, percentage: 85 },
-    { name: "Nature", count: 982, percentage: 70 },
-    { name: "Fantasy", count: 753, percentage: 55 },
-    { name: "Space", count: 621, percentage: 45 },
-    { name: "Vehicles", count: 489, percentage: 35 },
-  ]
+  // popularCategories = [
+  //   { name: "Animals", count: 1245, percentage: 85 },
+  //   { name: "Nature", count: 982, percentage: 70 },
+  //   { name: "Fantasy", count: 753, percentage: 55 },
+  //   { name: "Space", count: 621, percentage: 45 },
+  //   { name: "Vehicles", count: 489, percentage: 35 },
+  // ]
 
   toggleSidenav() {
     this.sidenavOpened = !this.sidenavOpened
