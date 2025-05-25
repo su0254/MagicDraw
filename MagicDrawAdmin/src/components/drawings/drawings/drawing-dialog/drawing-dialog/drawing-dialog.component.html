@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<form [formGroup]="drawingForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" placeholder="Enter title">
+      <mat-error *ngIf="drawingForm.get('title')?.hasError('required')">
+        Title is required
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="category">
+        <mat-option *ngFor="let category of categories" [value]="category">
+          {{ category }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="drawingForm.get('category')?.hasError('required')">
+        Category is required
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Artist</mat-label>
+      <input matInput formControlName="artist" placeholder="Enter artist name">
+      <mat-error *ngIf="drawingForm.get('artist')?.hasError('required')">
+        Artist is required
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="full-width" *ngIf="data.drawing.id">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let status of statuses" [value]="status">
+          {{ status }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="drawingForm.get('status')?.hasError('required')">
+        Status is required
+      </mat-error>
+    </mat-form-field>
+    
+    <div class="file-upload-container" *ngIf="drawingForm.get('file')">
+      <label for="drawing-file">Upload Drawing Image:</label>
+      <input type="file" id="drawing-file" formControlName="file" accept="image/*">
+      <mat-error *ngIf="drawingForm.get('file')?.hasError('required')">
+        Drawing image is required
+      </mat-error>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="drawingForm.invalid">Save</button>
+  </mat-dialog-actions>
+</form>
