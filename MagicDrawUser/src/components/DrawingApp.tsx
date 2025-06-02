@@ -82,6 +82,7 @@ const DrawingApp: React.FC = () => {
   }
 
   const handleBrushRadiusChange = (event: Event, value: number | number[]) => {
+    console.log(event, value);
     setBrushRadius(value as number)
   }
 
@@ -103,7 +104,7 @@ const DrawingApp: React.FC = () => {
 
         ctx?.drawImage(img, 0, 0)
 
-        const drawingData = canvasRef.current?.getDataURL(`${img.src?.split(".").pop()}`)
+        const drawingData = (canvasRef.current as any)?.getDataURL(`${img.src?.split(".").pop()}`)
         const drawingImg = new Image()
         drawingImg.src = drawingData
         drawingImg.onload = async () => {
@@ -146,7 +147,7 @@ const DrawingApp: React.FC = () => {
 
         ctx?.drawImage(img, 0, 0)
 
-        const drawingData = canvasRef.current?.getDataURL("image/png")
+        const drawingData = (canvasRef.current as any)?.getDataURL("image/png");
         const drawingImg = new Image()
         drawingImg.src = drawingData
         drawingImg.onload = () => {
@@ -178,7 +179,8 @@ const DrawingApp: React.FC = () => {
 
         ctx?.drawImage(img, 0, 0);
 
-        const drawingData = canvasRef.current?.getDataURL("image/png");
+        const drawingData = (canvasRef.current as any)?.getDataURL("image/png");
+
         const drawingImg = new Image();
         drawingImg.src = drawingData;
         console.log("drawingImg", drawingImg.src);
