@@ -3,7 +3,7 @@ import axios from "axios";
 import { UpLoadPaintingType } from "../../types/UpLoadPaintingType";
 
 // API base URL
-const baseUrl = 'http://localhost:5058/api/';
+const baseUrl = 'https://magicdrawapi.onrender.com/api/';
 
 // Async thunk for adding a new painting
 export const addPainting = createAsyncThunk(

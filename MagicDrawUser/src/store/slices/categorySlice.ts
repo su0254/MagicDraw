@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // API base URL
-const baseUrl = 'http://localhost:5058/api/';
+const baseUrl = 'https://magicdrawapi.onrender.com/api/';
 
 // Fetch all categories from the server
 export const fetchCategories = createAsyncThunk('categories/fetchAll', async (_, thunkAPI) => {

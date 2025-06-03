@@ -4,7 +4,7 @@ import { UserLoginType } from "../../types/UserLoginType";
 import { UserRegisterType } from "../../types/UserRegisterType";
 
 // API base URL
-const baseUrl = 'http://localhost:5058/api/';
+const baseUrl = 'https://magicdrawapi.onrender.com/api/';
 
 // Login to the server
 export const login = createAsyncThunk('data/login', async (data: UserLoginType, thunkAPI) => {
