@@ -782,6 +782,8 @@ const DrawingApp = () => {
             fileName: "12345",
             imageFile: file,
           }
+          console.log("paintingData", paintingData);
+          
 
           // Here you would dispatch to Redux or use another method to save
           // await dispatch(addPaintedPainting(paintingData))
