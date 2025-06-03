@@ -11,13 +11,13 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Children's-drawing.API/Childrens-drawing.API.csproj", "Children's-drawing.API/"]
-COPY ["Children's-drawing.Core/Childrens-drawing.Core.csproj", "Children's-drawing.Core/"]
-COPY ["Children's-drawing.Data/Childrens-drawing.Data.csproj", "Children's-drawing.Data/"]
-COPY ["Children's-drawing.Service/Childrens-drawing.Service.csproj", "Children's-drawing.Service/"]
-RUN dotnet restore "./Children's-drawing.API/Childrens-drawing.API.csproj"
+COPY ["ChildrenDrawing.API/Childrens-drawing.API.csproj", "ChildrenDrawing.API/"]
+COPY ["ChildrenDrawing.Core/Childrens-drawing.Core.csproj", "ChildrenDrawing.Core/"]
+COPY ["ChildrenDrawing.Data/Childrens-drawing.Data.csproj", "ChildrenDrawing.Data/"]
+COPY ["ChildrenDrawing.Service/Childrens-drawing.Service.csproj", "ChildrenDrawing.Service/"]
+RUN dotnet restore "./ChildrenDrawing.API/Childrens-drawing.API.csproj"
 COPY . .
-WORKDIR "/src/Children's-drawing.API"
+WORKDIR "/src/ChildrenDrawing.API"
 RUN dotnet build "./Childrens-drawing.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
