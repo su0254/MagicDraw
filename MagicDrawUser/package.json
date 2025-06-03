@@ -7,9 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "npm run build && node server.js",
-    "deploy": "npm install --legacy-peer-deps && npm run build"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -22,11 +20,12 @@
     "axios": "^1.8.3",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
+    "konva": "^9.3.20",
     "mammoth": "^1.9.0",
     "react": "^19.0.0",
-    "react-canvas-draw": "^1.2.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "react-konva": "^19.0.4",
     "react-redux": "^9.2.0",
     "react-router": "^7.3.0",
     "react-router-dom": "^7.3.0",

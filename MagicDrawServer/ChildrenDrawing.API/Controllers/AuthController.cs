@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Children_s_drawing.Core.Entities;
 using Childrens_drawing.API.PostModels;
 using Childrens_drawing.Core.Dtos;
 using Childrens_drawing.Core.InterfacesServices;
