@@ -9,7 +9,7 @@ import { Drawing } from '../../Models/Drawing';
 export class DrawingService {
   private drawingsSubject = new BehaviorSubject<Drawing[]>([]);
   drawings$ = this.drawingsSubject.asObservable();
-  private apiUrl = "http://localhost:5058/api/Painting";
+  private apiUrl = "https://magicdrawapi.onrender.com/api/Painting";
 
   constructor(private http: HttpClient) {}
 

@@ -75,7 +75,7 @@ namespace Children_s_drawing.Service.Services
 
             var imageUrl = image.Url;
             // חלץ את ה-public ID מה-URL
-            string publicId = imageUrl.Substring(imageUrl.LastIndexOf('/') + 1).Split('.')[0];
+            string publicId = ExtractPublicIdFromUrl(imageUrl);
 
             DotEnv.Load();
             var cloudName = Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME");
@@ -88,7 +88,7 @@ namespace Children_s_drawing.Service.Services
 
             // מחיקת התמונה מ-Cloudinary
             var deleteParams = new DeletionParams(publicId);
-            var result = cloudinary.Destroy(deleteParams);
+            var result = await cloudinary.DestroyAsync(deleteParams);
 
             // בדוק אם המחיקה הצליחה
             if (result.StatusCode != HttpStatusCode.OK || result.Result != "ok")
@@ -147,6 +147,45 @@ namespace Children_s_drawing.Service.Services
             if (paintings != null)
                 await _repositoryManager.SaveAsync();
             return paintings;
+        }
+
+        private string ExtractPublicIdFromUrl(string url)
+        {
+            var uri = new Uri(url);
+            var segments = uri.AbsolutePath.Split('/');
+
+            // אנחנו מחפשים את החלק אחרי "/upload/"
+            var uploadIndex = Array.IndexOf(segments, "upload");
+            if (uploadIndex < 0 || uploadIndex + 1 >= segments.Length)
+            {
+                throw new ArgumentException("Invalid Cloudinary URL");
+            }
+
+            // חותכים את החלק של ה-upload
+            var pathParts = segments.Skip(uploadIndex + 1).ToArray();
+            var filePath = string.Join("/", pathParts);
+
+            // הסר את ה-version אם קיים
+            var versionIndex = filePath.IndexOf("v", StringComparison.OrdinalIgnoreCase);
+            if (versionIndex >= 0)
+            {
+                // נסיר את ה-version על ידי חיתוך החלק שמופיע אחרי ה-v
+                filePath = filePath.Substring(filePath.IndexOf("/", versionIndex) + 1);
+            }
+
+            // הסר את הסיומת האחרונה
+            var lastDotIndex = filePath.LastIndexOf('.');
+            if (lastDotIndex >= 0)
+            {
+                // במקרה של שתי סיומות, כמו .jpeg.jpg, נוודא שנסיר את .jpg בלבד
+                if (filePath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) && filePath.Contains(".jpeg"))
+                {
+                    return filePath.Substring(0, filePath.Length - 4); // הסר .jpg
+                }
+                return filePath.Substring(0, lastDotIndex); // הסר את הסיומת
+            }
+
+            return filePath;
         }
 
 

@@ -15,7 +15,7 @@ export class CategoryService {
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
 
   getAllCategories(): void {
-    this.http.get<Category[]>('http://localhost:5058/api/Category').pipe(
+    this.http.get<Category[]>('https://magicdrawapi.onrender.com/api/Category').pipe(
       tap((categories) => {
         this.categoriesSubject.next(categories);
         this.showMessage('קטגוריות נטענו בהצלחה', 'success');
@@ -28,7 +28,7 @@ export class CategoryService {
   }
 
   addCategory(category: Category): void {
-    this.http.post('http://localhost:5058/api/Category', category).subscribe({
+    this.http.post('https://magicdrawapi.onrender.com/api/Category', category).subscribe({
       next: () => {
         this.showMessage('קטגוריה נוספה בהצלחה', 'success');
         this.refreshCategories();
@@ -40,7 +40,7 @@ export class CategoryService {
   }
 
   deleteCategory(categoryId: string): void {
-    this.http.delete(`http://localhost:5058/api/Category/${categoryId}`).subscribe({
+    this.http.delete(`https://magicdrawapi.onrender.com/Category/${categoryId}`).subscribe({
       next: () => {
         this.showMessage('קטגוריה נמחקה בהצלחה', 'success');
         this.refreshCategories();
@@ -52,7 +52,7 @@ export class CategoryService {
   }
 
   updateCategory(categoryId: string, updatedCategory: Category): void {
-    this.http.put(`http://localhost:5058/api/Category/${categoryId}`, updatedCategory).subscribe({
+    this.http.put(`https://magicdrawapi.onrender.com/api/Category/${categoryId}`, updatedCategory).subscribe({
       next: () => {
         this.showMessage('קטגוריה עודכנה בהצלחה', 'success');
         this.refreshCategories();

@@ -15,7 +15,7 @@ export class UserService {
   constructor(private http: HttpClient, private snackBar: MatSnackBar, private auth: LoginService) { }
 
   getAllUsers(): Observable<any> {
-    return this.http.get<any[]>("http://localhost:5058/api/User").pipe(
+    return this.http.get<any[]>("https://magicdrawapi.onrender.com/api/User").pipe(
       tap((users: any[]) => {
 
         this.usersSubject.next(users);
@@ -29,7 +29,7 @@ export class UserService {
   }
 
   getUserById(userId: string): Observable<any> {
-    return this.http.get(`http://localhost:5058/api/User/${userId}`).pipe(
+    return this.http.get(`https://magicdrawapi.onrender.com/api/User/${userId}`).pipe(
       tap(() => this.showMessage("משתמש נטען בהצלחה", "success")),
       catchError((error) => {
         this.showMessage("שגיאה בטעינת המשתמש", "error");
@@ -41,7 +41,7 @@ export class UserService {
   addUser(user: any) {
     console.log("user in service", user);
 
-     this.http.post("http://localhost:5058/api/User", user).subscribe(
+     this.http.post("https://magicdrawapi.onrender.com/api/User", user).subscribe(
       {
         next: (() => {
           console.log("user was added", user);
@@ -65,7 +65,7 @@ export class UserService {
     // const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     console.log("delete in service", userId);
 
-    this.http.delete(`http://localhost:5058/api/User/${userId}`).subscribe({
+    this.http.delete(`https://magicdrawapi.onrender.com/api/User/${userId}`).subscribe({
       next: () => {
         console.log("User was deleted");
         this.showMessage("משתמש נמחק בהצלחה", "success");

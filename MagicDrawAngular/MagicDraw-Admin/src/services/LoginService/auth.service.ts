@@ -12,7 +12,7 @@ export class LoginService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(user: Partial<UserLogin>) {
-    this.http.post("http://localhost:5058/api/Auth/login",
+    this.http.post("https://magicdrawapi.onrender.com/api/Auth/login",
       {
         email: user.user?.email ?? '',
         password: user.user?.password ?? ''
