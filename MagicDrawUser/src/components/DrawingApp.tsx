@@ -632,6 +632,7 @@ import axios from "axios"
 import { useLocation, useNavigate } from "react-router"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../store/store"
+import { addPaintedPainting } from "../store/slices/paintingPaintedSlice"
 
 // Color palette
 const colorPalette = [
@@ -672,9 +673,6 @@ const DrawingApp = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
-  // Mock location and navigation for demonstration
-  // const location = { state: { backgroundImageUrl: "/placeholder.svg?height=400&width=800" } }
-  // const navigate = (path: any) => console.log(`Navigating to: ${path}`)
   const { backgroundImageUrl } = location.state || {}
 
 
@@ -793,7 +791,7 @@ const DrawingApp = () => {
 
 
           // Here you would dispatch to Redux or use another method to save
-          // await dispatch(addPaintedPainting(paintingData))
+           await dispatch(addPaintedPainting(paintingData))
 
           alert("הציור נשמר בהצלחה!")
         } catch (error) {
