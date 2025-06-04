@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,40 +67,44 @@ namespace Children_s_drawing.Service.Services
         public async Task<bool> DeleteByIdAsync(Guid id)
         {
             var image = await _repositoryManager._paintingRepository.GetByIdAsync(id);
+            if (image == null)
+            {
+                Console.WriteLine("התמונה לא נמצאה במסד הנתונים.");
+                return false;
+            }
+
             var imageUrl = image.Url;
+            // חלץ את ה-public ID מה-URL
             string publicId = imageUrl.Substring(imageUrl.LastIndexOf('/') + 1).Split('.')[0];
+
             DotEnv.Load();
-            Console.WriteLine(Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME"));
-            // קבל את הערכים
             var cloudName = Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME");
             var apiKey = Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY");
             var apiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET");
-            Console.WriteLine($"Cloud Name: {cloudName}");
-            Console.WriteLine($"API Key: {apiKey}");
-            Console.WriteLine($"API Secret: {apiSecret}");
 
-
-            // הגדרות עם הנתונים שלך (החלף עם הערכים האמיתיים שלך)
-            var account = new Account(
-                cloudName,      // שנה לערך מה-Cloudinary Dashboard
-                apiKey,         // שנה לערך מה-Cloudinary Dashboard
-                apiSecret       // שנה לערך מה-Cloudinary Dashboard
-            );
-
+            var account = new Account(cloudName, apiKey, apiSecret);
             var cloudinary = new Cloudinary(account);
-            cloudinary.Api.Secure = true; // 
+            cloudinary.Api.Secure = true;
 
-            // מחיקת התמונה
+            // מחיקת התמונה מ-Cloudinary
             var deleteParams = new DeletionParams(publicId);
             var result = cloudinary.Destroy(deleteParams);
 
-            Console.WriteLine("תמונה נמחקה: " + result.Result);
+            // בדוק אם המחיקה הצליחה
+            if (result.StatusCode != HttpStatusCode.OK || result.Result != "ok")
+            {
+                Console.WriteLine("שגיאה במחיקת התמונה מ-Cloudinary: " + result.Error?.Message);
+                return false; // אם המחיקה נכשלת, לא נמשיך למחוק ממסד הנתונים
+            }
 
+            // מחיקת התמונה ממסד הנתונים
             bool succeed = await _repositoryManager._paintingRepository.DeleteByIdAsync(id);
             if (succeed)
                 await _repositoryManager.SaveAsync();
+
             return succeed;
         }
+
 
         public async Task<IEnumerable<PaintingDto>> GetAllAsync()
         {
