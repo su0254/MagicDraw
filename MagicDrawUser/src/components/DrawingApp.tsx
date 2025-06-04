@@ -184,7 +184,7 @@
 //         const drawingImg = new Image();
 //         drawingImg.src = drawingData;
 //         console.log("drawingImg", drawingImg.src);
-        
+
 //         drawingImg.onload = () => {
 //           ctx?.drawImage(drawingImg, 0, 0);
 
@@ -216,7 +216,7 @@
 
 //   const fetchColorInstructions = async () => {
 //     console.log("backgroundImageUrl", backgroundImageUrl);
-    
+
 //     if (backgroundImageUrl) { // משתמש ב-URL של התמונה
 //       const response = await axios.post('http://127.0.0.1:5000/color_instructions', {
 //         image_path: backgroundImageUrl // שולח את ה-URL של התמונה
@@ -629,6 +629,9 @@ import PaletteIcon from "@mui/icons-material/Palette"
 import FormatPaintIcon from "@mui/icons-material/FormatPaint"
 import PrintIcon from "@mui/icons-material/Print"
 import axios from "axios"
+import { useLocation, useNavigate } from "react-router"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "../store/store"
 
 // Color palette
 const colorPalette = [
@@ -650,7 +653,7 @@ const colorPalette = [
 const DrawingApp = () => {
   const [brushColor, setBrushColor] = useState("#FF9AA2")
   const [brushWidth, setBrushWidth] = useState(5)
-  
+
   type LineType = {
     points: number[]
     color: string
@@ -666,10 +669,14 @@ const DrawingApp = () => {
   const backgroundImageRef = useRef<any>(null)
   const [backgroundImage, setBackgroundImage] = useState<HTMLImageElement | null>(null)
 
+  const location = useLocation()
+  const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
   // Mock location and navigation for demonstration
-  const location = { state: { backgroundImageUrl: "/placeholder.svg?height=400&width=800" } }
-  const navigate = (path:any) => console.log(`Navigating to: ${path}`)
+  // const location = { state: { backgroundImageUrl: "/placeholder.svg?height=400&width=800" } }
+  // const navigate = (path: any) => console.log(`Navigating to: ${path}`)
   const { backgroundImageUrl } = location.state || {}
+
 
   useEffect(() => {
     if (backgroundImageUrl) {
@@ -699,7 +706,7 @@ const DrawingApp = () => {
     }
   }, [backgroundImageUrl])
 
-  const handleMouseDown = (e:any) => {
+  const handleMouseDown = (e: any) => {
     setIsDrawing(true)
     const pos = e.target.getStage().getPointerPosition()
 
@@ -730,12 +737,12 @@ const DrawingApp = () => {
     setIsDrawing(false)
   }
 
-  const handleColorChange = (event:any) => {
+  const handleColorChange = (event: any) => {
     setBrushColor(event.target.value)
     setIsEraser(false)
   }
 
-  const handleBrushWidthChange = (event:any, value:any) => {
+  const handleBrushWidthChange = (event: any, value: any) => {
     setBrushWidth(value)
     console.log(event, value);
   }
@@ -783,7 +790,7 @@ const DrawingApp = () => {
             imageFile: file,
           }
           console.log("paintingData", paintingData);
-          
+
 
           // Here you would dispatch to Redux or use another method to save
           // await dispatch(addPaintedPainting(paintingData))
