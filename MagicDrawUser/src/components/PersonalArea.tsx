@@ -341,7 +341,7 @@ const PersonalArea: React.FC = () => {
 
   const handleSaveDetails = async () => {
     try {
-      await axios.put(`http://localhost:5058/api/User/${userId}`, userDetails)
+      await axios.put(`https://magicdrawapi.onrender.com/api/User/${userId}`, userDetails)
       alert("הפרטים עודכנו בהצלחה!")
       setIsEditing(false)
     } catch (error) {
