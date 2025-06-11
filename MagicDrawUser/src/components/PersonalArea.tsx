@@ -320,7 +320,7 @@ const PersonalArea: React.FC = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5058/api/User/${userId}`)
+        const response = await axios.get(`https://magicdrawapi.onrender.com/api/User/${userId}`)
         setUserDetails(response.data)
       } catch (error) {
         console.error("שגיאה בשליפת פרטי המשתמש:", error)
