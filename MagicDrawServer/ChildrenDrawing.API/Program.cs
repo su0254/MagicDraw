@@ -14,6 +14,7 @@ namespace Children_s_drawing.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container
+            builder.Services.AddHttpClient();
             builder.Services.AddControllers();
 
             // הוספת מדיניות CORS
