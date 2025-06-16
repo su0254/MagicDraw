@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IO;
 using System.Text.Json;
+using Childrens_drawing.API.PostModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,9 +24,9 @@ namespace Childrens_drawing.API.Controllers
         }
 
         [HttpPost("aiDrawingInstructions")]
-        public async Task<string> AiDrawingInstructions([FromBody] string path)
+        public async Task<string> AiDrawingInstructions([FromBody] ImageUrl imageUrl)
         {
-            var base64Image = await ConvertImageToBase64Async(path);
+            var base64Image = await ConvertImageToBase64Async(imageUrl.Path);
 
             DotEnv.Load();
             var apiKey = Environment.GetEnvironmentVariable("API_KEY");
@@ -87,7 +88,7 @@ namespace Childrens_drawing.API.Controllers
         private async Task<string> ConvertImageToBase64Async(string imageUrl)
         {
             Console.WriteLine(" first "+imageUrl);
-            imageUrl = imageUrl.Substring(2);
+            //imageUrl = imageUrl.Substring(2);
             Console.WriteLine("second "+imageUrl);
             using (var httpClient = new HttpClient())
             {
