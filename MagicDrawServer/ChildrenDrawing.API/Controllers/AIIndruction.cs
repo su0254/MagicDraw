@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Text.Json;
 using Childrens_drawing.API.PostModels;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,6 +25,7 @@ namespace Childrens_drawing.API.Controllers
         }
 
         [HttpPost("aiDrawingInstructions")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<string> AiDrawingInstructions([FromBody] ImageUrl imageUrl)
         {
             var base64Image = await ConvertImageToBase64Async(imageUrl.Path);
@@ -87,15 +89,10 @@ namespace Childrens_drawing.API.Controllers
 
         private async Task<string> ConvertImageToBase64Async(string imageUrl)
         {
-            Console.WriteLine(" first "+imageUrl);
-            //imageUrl = imageUrl.Substring(2);
-            Console.WriteLine("second "+imageUrl);
             using (var httpClient = new HttpClient())
             {
-                // הורדת התמונה מה-URL
                 byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
 
-                // המרה ל-base64
                 return Convert.ToBase64String(imageBytes);
             }
         }

@@ -27,7 +27,6 @@ namespace Children_s_drawing.API.Controllers
 
         // GET: api/<CategoryController>
         [HttpGet]
-        //[Authorize(Roles= "EditorOrAdmin")]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> Get()
         {
             var categorys = await _categoryService.GetAllAsync();
@@ -38,7 +37,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        //[Authorize(Roles = "EditorOrAdmin")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<ActionResult<CategoryDto>> Get(Guid id)
         {
             var c = await _categoryService.GetByIdAsync(id);
@@ -50,7 +49,7 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CategoryDto>> Post([FromBody] CategoryPostModel category)
         {
             var categoryDto = _mapper.Map<CategoryDto>(category);
@@ -74,7 +73,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<bool> Delete(Guid id)
         {
             return await _categoryService.DeleteByIdAsync(id);

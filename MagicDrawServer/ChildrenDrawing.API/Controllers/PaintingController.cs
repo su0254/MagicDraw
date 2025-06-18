@@ -25,7 +25,6 @@ namespace Children_s_drawing.API.Controllers
 
         // GET: api/<CategoryController>
         [HttpGet]
-        //[Authorize(Roles= "Viewer")]
         public async Task<ActionResult<IEnumerable<PaintingDto>>> Get()
         {
             var paintings = await _paintingService.GetAllAsync();
@@ -36,7 +35,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        //[Authorize(Roles = "EditorOrAdmin")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<ActionResult<PaintingDto>> Get(Guid id)
         {
             var p = await _paintingService.GetByIdAsync(id);
@@ -49,6 +48,7 @@ namespace Children_s_drawing.API.Controllers
         // POST api/<CategoryController>
         [HttpPost]
         //[Authorize(Roles = "EditorOrAdmin")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<ActionResult<PaintingDto>> Post([FromForm] PaintingPostModel painting)
         {
             var paintingDto = _mapper.Map<PaintingDto>(painting);
@@ -60,7 +60,7 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        //[Authorize(Roles = "EditorOrAdmin")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<ActionResult<PaintingDto>> Put(Guid id, [FromBody] PaintingPostModel painting)
         {
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -75,13 +75,14 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<bool> Delete(Guid id)
         {
             return await _paintingService.DeleteByIdAsync(id);
         }
 
         [HttpGet("GetByCategory/{categoryName}")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<ActionResult<IEnumerable<PaintingDto>>> GetByCategory(string categoryName)
         {
             var paintings = await _paintingService.GetPaintingsByCategoryAsync(categoryName);

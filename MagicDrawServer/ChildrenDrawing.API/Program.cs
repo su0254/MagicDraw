@@ -16,12 +16,13 @@ namespace Children_s_drawing.API
             // Add services to the container
             builder.Services.AddHttpClient();
             builder.Services.AddControllers();
+            builder.Services.AddDependencies();
 
-            // הוספת מדיניות CORS
+            // CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
-                    builder => builder.AllowAnyOrigin()
+                    builder => builder.WithOrigins("*")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader());
             });
@@ -56,7 +57,7 @@ namespace Children_s_drawing.API
                 });
             });
 
-            builder.Services.AddDependencies();
+         
 
             builder.Services.AddAuthentication(options =>
             {
@@ -73,7 +74,8 @@ namespace Children_s_drawing.API
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = builder.Configuration["JWT:Issuer"],
                     ValidAudience = builder.Configuration["JWT:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
                 };
             });
 

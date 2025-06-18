@@ -35,7 +35,7 @@ namespace Children_s_drawing.API.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        [Authorize(Roles= "EditorOrAdmin")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<ActionResult<PaintedPaintingDto>> Get(Guid id)
         {
             var p = await _paintedPaintingService.GetByIdAsync(id);
@@ -47,7 +47,7 @@ namespace Children_s_drawing.API.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        //[Authorize(Roles = "EditorOrAdmin")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<ActionResult<PaintedPaintingDto>> Post([FromForm] PaintedPaintingPostModel paintedPainting)
         {
             var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
@@ -59,7 +59,7 @@ namespace Children_s_drawing.API.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        [Authorize(Roles = "EditorOrAdmin")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<ActionResult<PaintedPaintingDto>> Put(Guid id, [FromBody] PaintedPaintingPostModel paintedPainting)
         {
             var paintedPaintingDto = _mapper.Map<PaintedPaintingDto>(paintedPainting);
@@ -71,7 +71,7 @@ namespace Children_s_drawing.API.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "EditorOrAdmin")]
+        [Authorize(Policy = "EditorOrAdmin")]
         public async Task<bool> Delete(Guid id)
         {
             return await _paintedPaintingService.DeleteByIdAsync(id);
