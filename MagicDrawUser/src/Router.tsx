@@ -7,6 +7,7 @@ import ShowPainting from "./components/ShowPainting";
 import DrawingApp from "./components/DrawingApp";
 import PersonalArea from "./components/PersonalArea";
 import PaintingsByCategory from "./components/PaintingsByCategory";
+import AIColorInstructions from "./components/AIInstructions";
 
 // Example usage of createBrowserRouter
 export const router = createBrowserRouter([
@@ -19,4 +20,5 @@ export const router = createBrowserRouter([
   { path: '/drawing-app', element: <DrawingApp/>, errorElement: <div>Error</div> },
   { path: "/personal-area", element: <PersonalArea />, errorElement: <div>Eror</div> },
   { path: "/paintingsByCategory/:categoryName", element: <PaintingsByCategory/>, errorElement: <div>Eror</div>},
+  { path: "/AIColorIndruction", element: <AIColorInstructions />, errorElement: <div>Eror</div>}
 ]);

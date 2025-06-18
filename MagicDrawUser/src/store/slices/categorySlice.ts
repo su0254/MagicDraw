@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getAuthHeader } from "../../authTokenManager";
 
 // API base URL
 const baseUrl = 'https://magicdrawapi.onrender.com/api/';
@@ -10,11 +11,11 @@ export const fetchCategories = createAsyncThunk('categories/fetchAll', async (_,
         console.log('Fetching categories...');
         // const token = sessionStorage.getItem('authToken'); // Retrieve the token from session storage
         const response = await axios.get(`${baseUrl}Category`,
-            // {
-            //     headers: {
-            //         Authorization: `Bearer ${token}`, // Add the token to the Authorization header
-            //     }
-            // }
+            {
+                headers: {
+                    ...getAuthHeader(),
+                }
+            }
         );
         console.log('Categories fetched:', response.data);
         return response.data; // Ensure this matches your API response structure

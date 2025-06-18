@@ -3,6 +3,7 @@ import authSlice from './slices/authSlice';
 import categorySlice from './slices/categorySlice';
 import paintingsSlice from './slices/paintingsSlice';
 import paintingPaintedSlice from './slices/paintingPaintedSlice';
+import colorInstructionsReducer from "./slices/AIinstructionsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     categories: categorySlice, // Add the category reducer
     paintings: paintingsSlice, // Add the paintings reducer
     paintedPaintings: paintingPaintedSlice, // Add the paintingsPainted reducer
+    AIcolorInstructions: colorInstructionsReducer,
   },
 });
 

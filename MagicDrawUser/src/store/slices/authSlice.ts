@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { UserLoginType } from "../../types/UserLoginType";
 import { UserRegisterType } from "../../types/UserRegisterType";
+import { setAuthToken } from "../../authTokenManager";
 
 // API base URL
 const baseUrl = 'https://magicdrawapi.onrender.com/api/';
@@ -20,7 +21,7 @@ export const login = createAsyncThunk('data/login', async (data: UserLoginType, 
       }
     );
     console.log(response);
-    sessionStorage.setItem('authToken', response.data.token);
+    setAuthToken(response.data.token);
     localStorage.setItem('userId', response.data.user.id);
     return response.data; // Ensure this matches your API response structure
   } catch (e: any) {
@@ -44,6 +45,8 @@ export const addUser = createAsyncThunk('data/addUser', async (data: UserRegiste
       }
     );
     console.log(response.data);
+    setAuthToken(response.data.token);
+    localStorage.setItem('userId', response.data.user.id);
     return response.data; // Ensure this matches your API response structure
   } catch (e: any) {
     return thunkAPI.rejectWithValue(e.message);

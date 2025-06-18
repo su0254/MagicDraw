@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { UpLoadPaintingType } from "../../types/UpLoadPaintingType";
+import { getAuthHeader } from "../../authTokenManager";
 
 // API base URL
 const baseUrl = 'https://magicdrawapi.onrender.com/api/';
@@ -20,6 +21,7 @@ export const addPainting = createAsyncThunk(
 
       const response = await axios.post(`${baseUrl}Painting`, formData, {
         headers: {
+          ...getAuthHeader(),
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -52,7 +54,13 @@ export const fetchPaintingsByCategory = createAsyncThunk(
   async (categoryId: string, thunkAPI) => {
     try {
       console.log('categoryId', categoryId);
-      const response = await axios.get(`${baseUrl}Painting/GetByCategory/${categoryId}`);
+      const response = await axios.get(`${baseUrl}Painting/GetByCategory/${categoryId}`,
+        {
+          headers: {
+            ...getAuthHeader(),
+          },
+        }
+      );
       return response.data; // Return the list of paintings for the given category
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);

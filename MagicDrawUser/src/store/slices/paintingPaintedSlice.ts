@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { UpLoadPaintingPaintedType } from "../../types/UpLoadPaintingPaintedType";
+import { getAuthHeader } from "../../authTokenManager";
 
 // API base URL
 const baseUrl = 'https://magicdrawapi.onrender.com/api/';
@@ -21,6 +22,7 @@ export const addPaintedPainting = createAsyncThunk(
         
       const response = await axios.post(`${baseUrl}PaintedPainting`, formData, {
         headers: {
+          ...getAuthHeader(),
           'Content-Type': 'multipart/form-data',
         }
       });
@@ -42,10 +44,36 @@ export const fetchPaintedPaintingsByUser = createAsyncThunk(
         throw new Error('User ID not found in localStorage');
       }
 
-      const response = await axios.get(`${baseUrl}PaintedPainting/paintedPaintings/user/${userId}`);
+      const response = await axios.get(`${baseUrl}PaintedPainting/paintedPaintings/user/${userId}`,
+         {
+          headers: {
+            ...getAuthHeader(),
+          }
+        }
+      );
       return response.data; // החזרת רשימת הציורים הצבועים
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+// Async thunk for deleting a drawing
+export const deletePaintedPainting = createAsyncThunk(
+  "drawings/deleteDrawing",
+  async (drawingId: string, thunkAPI) => {
+    try {
+      const response = await axios.delete(
+        `${baseUrl}PaintedPainting/${drawingId}`,
+        {
+          headers: {
+            ...getAuthHeader(),
+          },
+        }
+      );
+      return response.data;
+    } catch (e: any) {
+      return thunkAPI.rejectWithValue(e.message);
     }
   }
 );
@@ -84,6 +112,20 @@ const paintingPaintedSlice = createSlice({
         state.list = action.payload; // Update the list with fetched painted paintings
       })
       .addCase(fetchPaintedPaintingsByUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // Delete drawing
+      .addCase(deletePaintedPainting.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletePaintedPainting.fulfilled, (state, action) => {
+        state.loading = false;
+        // מסנן את הציור שנמחק מהרשימה
+        state.list = state.list.filter((item) => item.id !== action.payload);
+      })
+      .addCase(deletePaintedPainting.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
